@@ -27,25 +27,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = async (phone: string, password: string): Promise<void> => {
-    // Mock login - replace with actual API call
-    const mockUser: User = {
-      id: '1',
-      name: 'Budi Santoso',
-      phone: phone,
-      email: 'budi@example.com',
-      role: 'rt',
-      createdAt: new Date(),
-    };
+    // Calling backend login endpoint using apiClient
+    // apiClient already maps API_BASE_URL internally, but wait, apiClient is in @/lib/api/api-client
+    // so we must import it.
+    
+    // We will do regular fetch manually here because apiClient depends on localStorage token,
+    // and for login we construct it. But apiClient handles POST.
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: phone, password }),
+      });
+      
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || data.error || 'Login failed');
+      }
 
-    setUser(mockUser);
-    setIsAuthenticated(true);
-    localStorage.setItem('civic_user', JSON.stringify(mockUser));
+      const { user: backendUser, token } = data;
+      
+      // Save token for apiClient
+      localStorage.setItem('token', token);
+
+      const mappedUser: User = {
+        id: String(backendUser.id),
+        name: backendUser.nama || backendUser.email || backendUser.nomorKK,
+        phone: backendUser.noTelp || backendUser.email || phone,
+        email: backendUser.email || '',
+        role: backendUser.role || backendUser.hakAkses || 'warga', // Adapts to multiple DB schemas
+        createdAt: new Date(backendUser.createdAt || new Date()),
+      };
+
+      setUser(mappedUser);
+      setIsAuthenticated(true);
+      localStorage.setItem('civic_user', JSON.stringify(mappedUser));
+    } catch (err: any) {
+      console.error("Login Error:", err);
+      throw err;
+    }
   };
 
   const logout = (): void => {
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem('civic_user');
+    localStorage.removeItem('token');
   };
 
   const value: AuthContextType = {

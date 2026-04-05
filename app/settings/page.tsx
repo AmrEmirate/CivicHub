@@ -9,15 +9,9 @@ const settingsMenu = [
   { id: 'profile', label: 'Profil Saya', icon: 'account_circle', description: 'Kelola akun pribadi Anda' },
 ];
 
-const mockUsers = [
-  { id: '1', name: 'Budi Santoso', phone: '+62812345678', role: 'RT', status: 'aktif' },
-  { id: '2', name: 'Rudi Hartono', phone: '+62823456789', role: 'Bendahara', status: 'aktif' },
-  { id: '3', name: 'Siti Nurhaliza', phone: '+62834567890', role: 'Sekretaris', status: 'aktif' },
-];
-
 export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState('users');
-  const [users, setUsers] = useState(mockUsers);
+  const [users, setUsers] = useState<any[]>([]); // Menunggu endpoint manajemen akses dari backend
 
   const deleteUser = (id: string) => {
     if (confirm('Hapus pengguna ini?')) {

@@ -1,111 +1,78 @@
 import { Member, CreateMemberInput, UpdateMemberInput, MembersResponse, MembersStats } from '@/lib/types/member';
-import { mockMembers, mockMembersStats } from '@/lib/mock-data/members';
 import { PaginationParams } from '@/lib/types/common';
-
-// This service layer is prepared for API integration
-// Replace mock data calls with actual API calls when backend is ready
+import { apiClient } from '@/lib/api/api-client';
 
 export const memberService = {
   // Fetch all members with pagination
   async getMembers(params: PaginationParams): Promise<MembersResponse> {
-    // TODO: Replace with API call
-    // const response = await fetch(`/api/members?page=${params.page}&limit=${params.limit}...`);
+    const rawData = await apiClient(`/warga`);
+    const dataArray = Array.isArray(rawData) ? rawData : [];
     
+    // Simulate pagination locally since BE doesn't support it yet
     const startIndex = (params.page - 1) * params.limit;
     const endIndex = startIndex + params.limit;
-    const paginatedData = mockMembers.slice(startIndex, endIndex);
+    const paginatedData = dataArray.slice(startIndex, endIndex);
 
     return {
       data: paginatedData,
-      total: mockMembers.length,
+      total: dataArray.length,
       page: params.page,
       limit: params.limit,
-      totalPages: Math.ceil(mockMembers.length / params.limit),
+      totalPages: Math.ceil(dataArray.length / params.limit),
     };
   },
 
   // Fetch single member
   async getMember(id: string): Promise<Member | null> {
-    // TODO: Replace with API call
-    // const response = await fetch(`/api/members/${id}`);
-    
-    return mockMembers.find(m => m.id === id) || null;
+    try {
+      const data = await apiClient(`/warga/${id}`);
+      return data;
+    } catch {
+      return null;
+    }
   },
 
   // Create new member
   async createMember(input: CreateMemberInput): Promise<Member> {
-    // TODO: Replace with API call
-    // const response = await fetch('/api/members', {
-    //   method: 'POST',
-    //   body: JSON.stringify(input),
-    // });
-    
-    const newMember: Member = {
-      id: String(mockMembers.length + 1),
-      ...input,
-      status: 'aktif',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    mockMembers.push(newMember);
-    return newMember;
+    const defaultPassword = `Warga${input.phoneNumber.slice(-4)}2024`; // min 8 chars password
+    const data = await apiClient('/warga', {
+      data: {
+        password: defaultPassword,
+        name: input.familyHeadName,
+        kepalaKeluarga: input.familyHeadName,
+        noTelepon: input.phoneNumber,
+        noKK: input.kkNumber,
+        noRumah: input.houseNumber,
+        jumlahAnggota: input.totalFamilyMembers,
+        statusRumah: input.ownershipStatus === 'milik' ? 'MILIK_SENDIRI' : 'SEWA',
+      },
+    });
+    return data;
   },
 
   // Update member
   async updateMember(id: string, input: UpdateMemberInput): Promise<Member> {
-    // TODO: Replace with API call
-    // const response = await fetch(`/api/members/${id}`, {
-    //   method: 'PUT',
-    //   body: JSON.stringify(input),
-    // });
-    
-    const member = mockMembers.find(m => m.id === id);
-    if (!member) throw new Error('Member not found');
-
-    Object.assign(member, input, { updatedAt: new Date() });
-    return member;
+    const data = await apiClient(`/warga/${id}`, {
+      method: 'PUT',
+      data: input,
+    });
+    return data;
   },
 
-  // Delete member
+  // Delete member (Opsional, backend mungkin belum implementasi delete)
   async deleteMember(id: string): Promise<void> {
-    // TODO: Replace with API call
-    // await fetch(`/api/members/${id}`, { method: 'DELETE' });
-    
-    const index = mockMembers.findIndex(m => m.id === id);
-    if (index > -1) {
-      mockMembers.splice(index, 1);
-    }
+    await apiClient(`/warga/${id}`, { method: 'DELETE' });
   },
 
   // Fetch members statistics
   async getMembersStats(): Promise<MembersStats> {
-    // TODO: Replace with API call
-    // const response = await fetch('/api/members/stats');
-    
-    return mockMembersStats;
+    const data = await apiClient('/warga/stats');
+    return data;
   },
 
   // Search members
   async searchMembers(query: string, params: PaginationParams): Promise<MembersResponse> {
-    // TODO: Replace with API call
-    // const response = await fetch(`/api/members/search?q=${query}&...`);
-    
-    const filtered = mockMembers.filter(m =>
-      m.familyHeadName.toLowerCase().includes(query.toLowerCase()) ||
-      m.phoneNumber.includes(query) ||
-      m.address.toLowerCase().includes(query.toLowerCase())
-    );
-
-    const startIndex = (params.page - 1) * params.limit;
-    const endIndex = startIndex + params.limit;
-
-    return {
-      data: filtered.slice(startIndex, endIndex),
-      total: filtered.length,
-      page: params.page,
-      limit: params.limit,
-      totalPages: Math.ceil(filtered.length / params.limit),
-    };
+    const data = await apiClient(`/warga?search=${encodeURIComponent(query)}&page=${params.page}&limit=${params.limit}`);
+    return data;
   },
 };

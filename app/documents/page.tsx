@@ -9,47 +9,13 @@ const documentTypes = [
   { id: 'notulen', label: 'Notulen Rapat', icon: 'notes', count: 8 },
 ];
 
-const mockDocuments = [
-  {
-    id: '1',
-    title: 'LPJ RT Tahun 2023',
-    type: 'lpj',
-    date: new Date('2024-01-15'),
-    createdBy: 'Bendahara',
-    size: '2.5 MB',
-  },
-  {
-    id: '2',
-    title: 'Laporan Tunggakan Januari 2024',
-    type: 'tunggakan',
-    date: new Date('2024-02-05'),
-    createdBy: 'Bendahara',
-    size: '1.2 MB',
-  },
-  {
-    id: '3',
-    title: 'Surat Keterangan Domisili - Budi Santoso',
-    type: 'surat',
-    date: new Date('2024-03-20'),
-    createdBy: 'Sekretaris',
-    size: '0.5 MB',
-  },
-  {
-    id: '4',
-    title: 'Notulen Rapat Rutin Maret 2024',
-    type: 'notulen',
-    date: new Date('2024-03-22'),
-    createdBy: 'Sekretaris',
-    size: '1.8 MB',
-  },
-];
-
 export default function DocumentsPage() {
   const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [documents, setDocuments] = useState<any[]>([]); // Menunggu endpoint BE untuk dokumen
 
   const filteredDocs = selectedType
-    ? mockDocuments.filter(d => d.type === selectedType)
-    : mockDocuments;
+    ? documents.filter(d => d.type === selectedType)
+    : documents;
 
   return (
     <div className="w-full flex flex-col gap-6 animate-in fade-in duration-500">
