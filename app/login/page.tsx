@@ -52,20 +52,20 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex w-full overflow-hidden bg-surface">
       {/* Left Side: Immersive Illustration Content */}
-      <section className="hidden lg:flex w-7/12 relative overflow-hidden bg-primary items-center justify-center p-12">
-        <div className="absolute inset-0 z-0">
+      <section className="hidden lg:flex w-7/12 relative overflow-hidden bg-[#001f2a] items-center justify-center p-12">
+        <div className="absolute inset-0 z-0 bg-[#001f2a]">
           <img 
             src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=2000&auto=format&fit=crop"
             alt="Community Unity" 
-            className="w-full h-full object-cover opacity-30 mix-blend-overlay grayscale"
+            className="w-full h-full object-cover opacity-50 transition-opacity duration-1000"
           />
-          <div className="absolute inset-0 bg-gradient-to-tr from-primary via-primary/80 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#000f14]/95 via-[#001f2a]/70 to-[#001f2a]/30"></div>
         </div>
         <div className="relative z-10 max-w-xl">
-          <h1 className="font-headline text-5xl font-extrabold text-white leading-tight tracking-tight mb-6">
-            Cultivate your community&apos;s <span className="text-secondary-container">digital sanctuary.</span>
+          <h1 className="font-headline text-5xl font-black text-white leading-tight tracking-tighter mb-6 drop-shadow-md">
+            Cultivate your community&apos;s <span className="text-cyan-300">digital sanctuary.</span>
           </h1>
-          <p className="text-primary-fixed text-lg font-light leading-relaxed mb-8">
+          <p className="text-white text-lg font-bold leading-relaxed mb-8 drop-shadow-sm">
             Welcome to Civic Hub, where administration meets elegance. Manage neighborhood logistics, financial growth, and community welfare with precision.
           </p>
           <div className="flex gap-4">
@@ -76,7 +76,7 @@ export default function LoginPage() {
             </div>
             <div className="text-white">
               <span className="block font-bold text-sm">Joined by 1,200+ citizens</span>
-              <span className="text-primary-fixed text-xs">Managing 45 local sub-districts</span>
+              <span className="text-white/70 text-xs font-semibold">Managing 45 local sub-districts</span>
             </div>
           </div>
         </div>

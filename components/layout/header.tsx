@@ -50,7 +50,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
             <input
               type="text"
               placeholder="Search community records..."
-              className="w-full pl-12 pr-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 border-none text-sm font-inter focus:ring-2 focus:ring-cyan-500/20 text-on-surface placeholder-slate-400 transition"
+              className="w-full pl-12 pr-4 py-2 rounded-full bg-surface-container-low dark:bg-surface-container-high border-2 border-outline-variant text-sm font-inter focus:ring-2 focus:ring-primary text-on-surface placeholder-on-surface/50 transition"
             />
           </div>
         </div>
@@ -63,7 +63,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
         <div className="relative">
           <button 
             onClick={() => setShowRoleSwitcher(!showRoleSwitcher)}
-            className="hidden lg:flex items-center gap-2 px-4 py-1.5 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-indigo-100 transition-all shadow-sm"
+            className="hidden lg:flex items-center gap-2 px-4 py-1.5 bg-primary dark:bg-primary-container text-on-primary rounded-full text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-md"
           >
             <span className="material-symbols-outlined text-[16px]">swap_horiz</span>
             Ganti Peran Demo
@@ -138,15 +138,15 @@ export default function Header({ onMenuClick }: HeaderProps) {
               <div className="absolute right-0 mt-2 w-56 bg-surface border border-outline-variant/30 rounded-2xl shadow-xl py-2 z-50 overflow-hidden transform opacity-100 scale-100 animate-in fade-in zoom-in-95 duration-200">
                 <div className="px-4 py-3 border-b border-outline-variant/30 bg-surface-container/30">
                   <p className="text-sm font-bold text-on-surface font-headline">{user?.name}</p>
-                  <p className="text-xs text-on-surface/60 font-inter">{user?.phone}</p>
+                  <p className="text-xs text-on-surface font-inter opacity-80">{user?.phone}</p>
                 </div>
 
                 <div className="py-1">
-                  <button className="w-full text-left px-4 py-2 hover:bg-surface-container text-sm text-slate-600 dark:text-slate-300 flex items-center gap-3 transition-colors">
+                  <button className="w-full text-left px-4 py-2 hover:bg-surface-container text-sm text-on-surface/70 flex items-center gap-3 transition-colors">
                     <span className="material-symbols-outlined text-[18px]">account_circle</span>
                     Profil Saya
                   </button>
-                  <button className="w-full text-left px-4 py-2 hover:bg-surface-container text-sm text-slate-600 dark:text-slate-300 flex items-center gap-3 transition-colors">
+                  <button className="w-full text-left px-4 py-2 hover:bg-surface-container text-sm text-on-surface/70 flex items-center gap-3 transition-colors">
                     <span className="material-symbols-outlined text-[18px]">lock</span>
                     Ubah Password
                   </button>

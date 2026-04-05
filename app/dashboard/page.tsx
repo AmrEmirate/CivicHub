@@ -59,7 +59,6 @@ export default function DashboardPage() {
       <div className="glass-panel p-8 rounded-3xl relative overflow-hidden custom-shadow border border-outline-variant/30 text-white">
         {/* Background gradient injection */}
         <div className="absolute inset-0 primary-gradient z-0"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-secondary-container/20 rounded-full blur-3xl -translate-y-12 translate-x-12 z-0 pointer-events-none"></div>
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
@@ -69,7 +68,7 @@ export default function DashboardPage() {
             </p>
           </div>
           <div className="flex gap-4">
-            <button className="px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-xl font-semibold text-sm transition-colors border border-white/20 flex items-center shadow-lg shadow-black/5">
+            <button className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold text-sm transition-colors border border-white/30 flex items-center shadow-lg">
               <span className="material-symbols-outlined mr-2 text-[18px]">receipt_long</span> Laporan
             </button>
             <button className="px-6 py-3 bg-white text-primary rounded-xl font-bold text-sm shadow-xl shadow-black/10 hover:scale-105 transition-transform flex items-center">
@@ -85,47 +84,47 @@ export default function DashboardPage() {
           
           {/* Financial Summary Bento */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="glass-panel p-6 rounded-3xl custom-shadow border border-outline-variant/30 flex flex-col justify-between">
+            <div className="glass-panel p-6 rounded-3xl flex flex-col justify-between">
               <div className="flex justify-between items-start mb-6">
-                <div className="w-10 h-10 rounded-full bg-cyan-100 dark:bg-cyan-900/40 flex items-center justify-center text-cyan-700 dark:text-cyan-400">
+                <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-primary-fixed-dim">
                   <span className="material-symbols-outlined text-[20px]">account_balance_wallet</span>
                 </div>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md">Total Kas</span>
+                <span className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant bg-surface-container-lowest px-2 py-1 rounded-md">Total Kas</span>
               </div>
               <div>
-                <h3 className="font-headline text-2xl font-black text-cyan-950 dark:text-cyan-50">
+                <h3 className="font-headline text-2xl font-black text-on-surface">
                   {financialStats ? formatIDR(financialStats.saldo) : 'Rp 0'}
                 </h3>
-                <p className="text-xs text-slate-500 font-medium mt-1">Saldo akhir operasional RT</p>
+                <p className="text-xs text-on-surface-variant font-medium mt-1">Saldo akhir operasional RT</p>
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-3xl custom-shadow border border-outline-variant/30 flex flex-col justify-between group">
+            <div className="glass-panel p-6 rounded-3xl flex flex-col justify-between group">
               <div className="flex justify-between items-start mb-6">
-                <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white group-hover:scale-110 transition-transform shadow-md">
                   <span className="material-symbols-outlined text-[20px]">trending_up</span>
                 </div>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-md">+4.2%</span>
+                <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-800 bg-emerald-100 px-2 py-1 rounded-md">+4.2%</span>
               </div>
               <div>
-                <h3 className="font-headline text-2xl font-black text-cyan-950 dark:text-cyan-50">
+                <h3 className="font-headline text-2xl font-black text-on-surface">
                   {financialStats ? formatIDR(financialStats.totalPemasukan) : 'Rp 0'}
                 </h3>
-                <p className="text-xs text-slate-500 font-medium mt-1">Pemasukan bulan ini</p>
+                <p className="text-xs text-on-surface-variant font-medium mt-1">Pemasukan bulan ini</p>
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-3xl custom-shadow border border-outline-variant/30 flex flex-col justify-between">
+            <div className="glass-panel p-6 rounded-3xl flex flex-col justify-between">
               <div className="flex justify-between items-start mb-6">
-                <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                <div className="w-10 h-10 rounded-full bg-rose-500 flex items-center justify-center text-white">
                   <span className="material-symbols-outlined text-[20px]">payments</span>
                 </div>
               </div>
               <div>
-                <h3 className="font-headline text-2xl font-black text-cyan-950 dark:text-cyan-50">
+                <h3 className="font-headline text-2xl font-black text-on-surface">
                   {financialStats ? formatIDR(financialStats.totalPengeluaran) : 'Rp 0'}
                 </h3>
-                <p className="text-xs text-slate-500 font-medium mt-1">Pengeluaran bulan ini</p>
+                <p className="text-xs text-on-surface-variant font-medium mt-1">Pengeluaran bulan ini</p>
               </div>
             </div>
           </div>
@@ -158,8 +157,8 @@ export default function DashboardPage() {
                     className="w-full primary-gradient rounded-t-sm transition-all duration-700 ease-out relative group-hover:opacity-90"
                     style={{ height: `${h}%` }}
                   >
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] font-bold py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                      {h * 15}K
+                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] font-bold py-1 px-3 rounded shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                      {h * 15} rb
                     </div>
                   </div>
                   <div className="absolute -bottom-6 w-full text-center text-[10px] font-semibold text-slate-400">Blok {['A','B','C','D','E','F','G'][i]}</div>
@@ -255,21 +254,21 @@ export default function DashboardPage() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-8 translate-x-8"></div>
               <h2 className="font-headline font-bold text-lg mb-6 relative z-10 text-white">Statistik Warga</h2>
               <div className="grid grid-cols-2 gap-4 relative z-10">
-                <div className="p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/10">
+                <div className="p-4 bg-white/10 rounded-2xl border border-white/20 transition-colors">
                   <span className="text-4xl font-black">{membersStats.totalKK}</span>
-                  <p className="text-[10px] uppercase tracking-widest text-cyan-200 font-bold mt-1">Total KK</p>
+                  <p className="text-[10px] uppercase tracking-widest text-white/80 font-bold mt-1">Total KK</p>
                 </div>
-                <div className="p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/10">
+                <div className="p-4 bg-white/10 rounded-2xl border border-white/20 transition-colors">
                   <span className="text-4xl font-black">{membersStats.totalWarga}</span>
-                  <p className="text-[10px] uppercase tracking-widest text-cyan-200 font-bold mt-1">Jiwa Warga</p>
+                  <p className="text-[10px] uppercase tracking-widest text-white/80 font-bold mt-1">Jiwa Warga</p>
                 </div>
-                <div className="p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/10">
+                <div className="p-4 bg-white/10 rounded-2xl border border-white/20 transition-colors">
                   <span className="text-2xl font-bold">{membersStats.hunianMilik}</span>
-                  <p className="text-[10px] uppercase tracking-widest text-cyan-200 font-bold mt-1">Milik Pribadi</p>
+                  <p className="text-[10px] uppercase tracking-widest text-white/80 font-bold mt-1">Milik Pribadi</p>
                 </div>
-                <div className="p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/10">
+                <div className="p-4 bg-white/10 rounded-2xl border border-white/20 transition-colors">
                   <span className="text-2xl font-bold">{membersStats.hunianSewa}</span>
-                  <p className="text-[10px] uppercase tracking-widest text-cyan-200 font-bold mt-1">Sewa / Kontrak</p>
+                  <p className="text-[10px] uppercase tracking-widest text-white/80 font-bold mt-1">Sewa / Kontrak</p>
                 </div>
               </div>
             </div>

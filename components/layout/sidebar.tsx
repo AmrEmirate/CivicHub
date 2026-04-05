@@ -32,12 +32,12 @@ export default function Sidebar({ onClose }: SidebarProps) {
   };
 
   return (
-    <aside className="w-full md:w-64 h-full bg-slate-50 dark:bg-slate-900 flex flex-col overflow-y-auto border-r border-outline-variant/20 transition-all">
+    <aside className="w-full md:w-64 h-full bg-surface-container-high dark:bg-surface-dim flex flex-col overflow-y-auto border-r border-outline-variant transition-all">
       {/* Logo Section */}
       <div className="px-6 py-8">
         <Link href="/dashboard" className="block" onClick={() => onClose?.()}>
-          <div className="text-2xl font-black text-cyan-900 dark:text-cyan-100 font-headline">Civic Hub</div>
-          <div className="text-xs font-inter font-medium text-slate-500 uppercase tracking-widest mt-1">Community Portal</div>
+          <div className="text-2xl font-black text-primary dark:text-primary-fixed-dim font-headline">Civic Hub</div>
+          <div className="text-[10px] font-inter font-black text-primary/60 uppercase tracking-widest mt-1">Community Portal</div>
         </Link>
       </div>
 
@@ -50,10 +50,10 @@ export default function Sidebar({ onClose }: SidebarProps) {
               key={module.id}
               href={`/${module.id}`}
               onClick={() => onClose?.()}
-              className={`flex items-center px-6 py-3 transition-colors duration-200 ${
+              className={`flex items-center px-6 py-3.5 transition-all duration-200 ${
                 active
-                  ? 'text-cyan-900 dark:text-cyan-100 font-bold border-r-4 border-cyan-800 dark:border-cyan-400 bg-cyan-50/50 dark:bg-cyan-950/20 scale-102 transform'
-                  : 'text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-cyan-800 dark:hover:text-cyan-200'
+                  ? 'text-on-primary bg-primary shadow-lg shadow-primary/20 font-bold border-r-4 border-white transform scale-105 z-10'
+                  : 'text-on-surface/70 hover:bg-surface-container-highest hover:text-primary'
               }`}
             >
               <span className="material-symbols-outlined mr-3">{module.icon}</span>

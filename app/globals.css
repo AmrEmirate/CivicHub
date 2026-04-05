@@ -95,8 +95,13 @@
   }
 
   .glass-header {
-    background: rgba(243, 250, 255, 0.8);
-    backdrop-filter: blur(20px);
+    background-color: var(--surface);
+    border-bottom: 2px solid var(--outline-variant);
+  }
+
+  .glass-panel {
+    background-color: var(--card);
+    border: 1px solid var(--outline-variant);
   }
 
   .primary-gradient {
@@ -104,7 +109,7 @@
   }
 
   .custom-shadow {
-    box-shadow: 0 20px 40px rgba(7, 30, 39, 0.08);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
   }
 }
 
