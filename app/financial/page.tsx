@@ -312,7 +312,7 @@ export default function FinancialPage() {
                          <div className="flex flex-col">
                             <span className="font-black text-slate-700 dark:text-slate-200 text-sm mb-1 group-hover/row:text-cyan-700 transition-colors">{trx.description}</span>
                             <div className="flex items-center gap-2">
-                               <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md text-[9px] font-black uppercase text-slate-400 tracking-tighter">ID: {trx.id.substring(0, 8)}</span>
+                               <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md text-[9px] font-black uppercase text-slate-400 tracking-tighter">ID: {String(trx.id).substring(0, 8)}</span>
                                <button 
                                  onClick={() => alert('Simulasi: Menampilkan popup gambar bukti transaksi...')}
                                  className="flex items-center gap-1.5 p-1.5 px-2 bg-cyan-50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 rounded-lg text-[9px] font-black uppercase tracking-tighter hover:bg-cyan-100 transition-all group-hover/row:scale-105"

@@ -26,7 +26,7 @@ export default function MembersTable({ members }: MembersTableProps) {
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-700 dark:text-cyan-400 flex items-center justify-center font-bold font-headline select-none">
-                      {member.familyHeadName.charAt(0).toUpperCase()}
+                      {(member.familyHeadName || '?').charAt(0).toUpperCase()}
                     </div>
                     <div>
                       <h4 className="font-bold text-slate-700 dark:text-slate-200 text-sm">{member.familyHeadName}</h4>
