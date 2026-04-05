@@ -1,0 +1,118 @@
+@import 'tailwindcss';
+
+:root {
+  /* Material Design 3 - Light Theme */
+  --surface: #f3fafe;
+  --on-surface: #071e27;
+  --surface-container-low: #f7fbfd;
+  --surface-container: #f3fafe;
+  --surface-container-high: #edf4f8;
+  --primary: #004357;
+  --on-primary: #ffffff;
+  --primary-container: #b4eaf5;
+  --on-primary-container: #001f28;
+  --secondary: #4d6365;
+  --on-secondary: #ffffff;
+  --secondary-container: #d0e8eb;
+  --on-secondary-container: #07373b;
+  --tertiary: #5e5d41;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #e8e6bc;
+  --on-tertiary-container: #1b1a05;
+  --error: #b3261e;
+  --on-error: #ffffff;
+  --error-container: #f9dedc;
+  --on-error-container: #410e0b;
+  --outline: #70787e;
+  --outline-variant: #afc2ca;
+  --background: #f3fafe;
+  --foreground: #071e27;
+  --card: #ffffff;
+  --card-foreground: #071e27;
+  --border: #edf4f8;
+  --input: #f7fbfd;
+  --ring: #004357;
+  --radius: 12px;
+  --success: #1b8c4d;
+  --warning: #f5a623;
+  --info: #004357;
+}
+
+.dark {
+  /* Material Design 3 - Dark Theme */
+  --surface: #071e27;
+  --on-surface: #def6ff;
+  --surface-container-low: #0a2635;
+  --surface-container: #0f2d39;
+  --surface-container-high: #1a3844;
+  --primary: #57d4f5;
+  --on-primary: #003546;
+  --primary-container: #004357;
+  --on-primary-container: #b4eaf5;
+  --secondary: #b4cdd1;
+  --on-secondary: #1e3537;
+  --secondary-container: #36484c;
+  --on-secondary-container: #d0e8eb;
+  --tertiary: #ccccb0;
+  --on-tertiary: #312f1a;
+  --tertiary-container: #484630;
+  --on-tertiary-container: #e8e6bc;
+  --error: #f2b8b5;
+  --on-error: #601410;
+  --error-container: #8c1d18;
+  --on-error-container: #f9dedc;
+  --outline: #99a2a9;
+  --outline-variant: #70787e;
+  --background: #071e27;
+  --foreground: #def6ff;
+  --card: #0f2d39;
+  --card-foreground: #def6ff;
+  --border: #1a3844;
+  --input: #0a2635;
+  --ring: #57d4f5;
+}
+
+@layer base {
+  body {
+    background-color: var(--surface);
+    color: var(--on-surface);
+  }
+
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined' !important;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .glass-header {
+    background: rgba(243, 250, 255, 0.8);
+    backdrop-filter: blur(20px);
+  }
+
+  .primary-gradient {
+    background: linear-gradient(135deg, #004357 0%, #1a5c72 100%);
+  }
+
+  .custom-shadow {
+    box-shadow: 0 20px 40px rgba(7, 30, 39, 0.08);
+  }
+}
+
+@theme {
+  --font-headline: 'Manrope', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 28px;
+}
