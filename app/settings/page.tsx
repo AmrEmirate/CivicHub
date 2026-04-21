@@ -1,12 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { 
+  Settings, ChevronRight, Users, Sliders, Cable, 
+  UserCircle, PlusCircle, PencilLine, Trash2, 
+  Mail, MessageSquare, Moon, MessageCircle, 
+  CreditCard, Save 
+} from 'lucide-react';
 
 const settingsMenu = [
-  { id: 'users', label: 'Manajemen Pengguna', icon: 'group', description: 'Kelola akun dan role pengguna' },
-  { id: 'preferences', label: 'Preferensi Sistem', icon: 'tune', description: 'Atur pengaturan umum sistem' },
-  { id: 'integrations', label: 'Integrasi', icon: 'api', description: 'Hubungkan dengan layanan eksternal' },
-  { id: 'profile', label: 'Profil Saya', icon: 'account_circle', description: 'Kelola akun pribadi Anda' },
+  { id: 'users', label: 'Manajemen Pengguna', icon: Users, description: 'Kelola akun dan role pengguna' },
+  { id: 'preferences', label: 'Preferensi Sistem', icon: Sliders, description: 'Atur pengaturan umum sistem' },
+  { id: 'integrations', label: 'Integrasi', icon: Cable, description: 'Hubungkan dengan layanan eksternal' },
+  { id: 'profile', label: 'Profil Saya', icon: UserCircle, description: 'Kelola akun pribadi Anda' },
 ];
 
 export default function SettingsPage() {
@@ -25,9 +31,9 @@ export default function SettingsPage() {
       {/* Page Header */}
       <div className="flex flex-col pb-2">
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-400 mb-3">
-          <span className="material-symbols-outlined text-[16px]">settings</span>
+          <Settings strokeWidth={2.5} className="w-4 h-4" />
           <span>Konfigurasi</span>
-          <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+          <ChevronRight strokeWidth={3} className="w-3 h-3" />
           <span className="text-secondary">Sistem</span>
         </div>
         <h1 className="font-headline text-3xl font-extrabold text-cyan-950 dark:text-cyan-50 tracking-tight">Pengaturan</h1>
@@ -66,7 +72,7 @@ export default function SettingsPage() {
               }`}
             >
               <div className="flex items-center gap-3 relative z-10">
-                <span className={`material-symbols-outlined text-[20px] transition-transform ${activeSection === item.id ? 'scale-110' : 'group-hover:scale-110'}`}>{item.icon}</span>
+                <item.icon strokeWidth={2.5} className={`w-5 h-5 transition-transform ${activeSection === item.id ? 'scale-110' : 'group-hover:scale-110'}`} />
                 <span className={`font-bold text-sm ${activeSection === item.id ? '' : 'font-medium'}`}>{item.label}</span>
               </div>
               {activeSection === item.id && (
@@ -87,7 +93,7 @@ export default function SettingsPage() {
                   <p className="text-sm text-slate-500 mt-1">Kelola data login seluruh pengurus dan warga.</p>
                 </div>
                 <button className="px-5 py-2.5 bg-primary text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2 transition-transform hover:-translate-y-0.5 shadow-lg shadow-primary/20 shrink-0">
-                  <span className="material-symbols-outlined text-[18px]">add_circle</span> Tambah Pengguna
+                  <PlusCircle strokeWidth={2.5} className="w-5 h-5" /> Tambah Pengguna
                 </button>
               </div>
 
@@ -126,14 +132,14 @@ export default function SettingsPage() {
                         <td className="px-6 py-4 text-right">
                           <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button className="p-2 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 text-cyan-600 rounded-xl transition-colors" title="Edit">
-                              <span className="material-symbols-outlined text-[18px]">edit</span>
+                              <PencilLine strokeWidth={2.5} className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => deleteUser(user.id)}
                               className="p-2 hover:bg-rose-50 dark:hover:bg-rose-900/30 text-rose-600 rounded-xl transition-colors"
                               title="Hapus"
                             >
-                              <span className="material-symbols-outlined text-[18px]">delete</span>
+                              <Trash2 strokeWidth={2.5} className="w-4 h-4" />
                             </button>
                           </div>
                         </td>
@@ -156,7 +162,7 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-4">
                      <div className="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-[20px]">mail</span>
+                        <Mail strokeWidth={2.5} className="w-5 h-5" />
                      </div>
                      <div>
                        <h3 className="font-bold text-sm text-slate-700 dark:text-slate-300">Notifikasi Email</h3>
@@ -172,7 +178,7 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-4">
                      <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-[20px]">forum</span>
+                        <MessageSquare strokeWidth={2.5} className="w-5 h-5" />
                      </div>
                      <div>
                        <h3 className="font-bold text-sm text-slate-700 dark:text-slate-300">Notifikasi WhatsApp</h3>
@@ -187,7 +193,7 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-4">
                      <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-[20px]">dark_mode</span>
+                        <Moon strokeWidth={2.5} className="w-5 h-5" />
                      </div>
                      <div>
                        <h3 className="font-bold text-sm text-slate-700 dark:text-slate-300">Mode Gelap (Dark Mode)</h3>
@@ -216,7 +222,7 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="border border-slate-200 dark:border-slate-700 rounded-2xl p-5 flex flex-col items-center text-center group hover:border-emerald-400 transition-colors bg-white dark:bg-slate-900">
                   <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center mb-4 text-emerald-500 group-hover:scale-110 transition-transform">
-                     <span className="material-symbols-outlined text-[32px]">mark_chat_unread</span>
+                     <MessageCircle strokeWidth={2.5} className="w-8 h-8" />
                   </div>
                   <h3 className="font-bold text-slate-700 dark:text-slate-200 text-sm">WhatsApp Gateway API</h3>
                   <p className="text-[10px] text-slate-500 mt-1 mb-4">Twilio / WABlas interkoneksi.</p>
@@ -227,7 +233,7 @@ export default function SettingsPage() {
 
                 <div className="border border-slate-200 dark:border-slate-700 rounded-2xl p-5 flex flex-col items-center text-center group hover:border-cyan-400 transition-colors bg-white dark:bg-slate-900">
                   <div className="w-16 h-16 rounded-full bg-cyan-50 dark:bg-cyan-900/20 flex items-center justify-center mb-4 text-cyan-600 group-hover:scale-110 transition-transform">
-                     <span className="material-symbols-outlined text-[32px]">payments</span>
+                     <CreditCard strokeWidth={2.5} className="w-8 h-8" />
                   </div>
                   <h3 className="font-bold text-slate-700 dark:text-slate-200 text-sm">Xendit / Midtrans</h3>
                   <p className="text-[10px] text-slate-500 mt-1 mb-4">Payment gateway verifikasi instan.</p>
@@ -276,7 +282,7 @@ export default function SettingsPage() {
                    </div>
 
                    <button className="w-full primary-gradient hover:opacity-90 text-white font-bold py-3 mt-4 rounded-xl transition-all shadow-lg shadow-cyan-900/20 active:scale-[0.98] flex items-center justify-center gap-2">
-                     <span className="material-symbols-outlined text-[18px]">save</span> Simpan Perubahan Profil
+                     <Save strokeWidth={2.5} className="w-5 h-5" /> Simpan Perubahan Profil
                    </button>
                  </div>
               </div>

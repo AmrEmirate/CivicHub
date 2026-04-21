@@ -5,20 +5,16 @@ import { apiClient } from '@/lib/api/api-client';
 export const financialService = {
   // Fetch all transactions / Buku Kas
   async getTransactions(params: PaginationParams): Promise<any> {
-    const rawData = await apiClient(`/kas/buku-kas`);
+    const rawData = await apiClient(`/kas/buku-kas?page=${params.page}&limit=${params.limit}`);
     const riwayat = rawData.riwayat || [];
-    
-    // Simulate pagination locally
-    const startIndex = (params.page - 1) * params.limit;
-    const endIndex = startIndex + params.limit;
-    const paginatedData = riwayat.slice(startIndex, endIndex);
+    const total = rawData.totalItem || 0;
 
     return {
-      data: paginatedData,
-      total: riwayat.length,
+      data: riwayat,
+      total: total,
       page: params.page,
       limit: params.limit,
-      totalPages: Math.ceil(riwayat.length / params.limit),
+      totalPages: Math.ceil(total / params.limit),
       totalSaldoAkhir: rawData.totalSaldoAkhir || 0
     };
   },
@@ -27,20 +23,16 @@ export const financialService = {
   // Kita gunakan tunggakan sebagai default list untuk admin
   async getInvoices(params: PaginationParams): Promise<any> {
     try {
-      const rawData = await apiClient(`/tagihan/tunggakan`);
-      const dataArray = Array.isArray(rawData) ? rawData : [];
-
-      // Simulate pagination locally
-      const startIndex = (params.page - 1) * params.limit;
-      const endIndex = startIndex + params.limit;
-      const paginatedData = dataArray.slice(startIndex, endIndex);
+      const rawData = await apiClient(`/tagihan/tunggakan?page=${params.page}&limit=${params.limit}`);
+      const dataArray = Array.isArray(rawData.data) ? rawData.data : [];
+      const total = rawData.total || 0;
 
       return {
-        data: paginatedData,
-        total: dataArray.length,
+        data: dataArray,
+        total: total,
         page: params.page,
         limit: params.limit,
-        totalPages: Math.ceil(dataArray.length / params.limit)
+        totalPages: Math.ceil(total / params.limit)
       };
     } catch {
       return { data: [], total: 0, page: 1, limit: params.limit, totalPages: 0 };

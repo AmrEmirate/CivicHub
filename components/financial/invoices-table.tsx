@@ -2,6 +2,7 @@
 
 import { Invoice } from '@/lib/types/financial';
 import { formatCurrency, formatDate } from '@/lib/utils/formatters';
+import { Eye, Printer, Receipt } from 'lucide-react';
 
 interface InvoicesTableProps {
   invoices: Invoice[];
@@ -53,10 +54,10 @@ export default function InvoicesTable({ invoices }: InvoicesTableProps) {
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button className="p-2 hover:bg-white dark:hover:bg-slate-800 text-slate-400 hover:text-cyan-600 rounded-xl transition-all shadow-sm border border-transparent hover:border-slate-100 dark:hover:border-slate-700" title="Detail">
-                      <span className="material-symbols-outlined text-[20px]">visibility</span>
+                      <Eye strokeWidth={2.5} className="w-4 h-4" />
                     </button>
                     <button className="p-2 hover:bg-white dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 rounded-xl transition-all shadow-sm border border-transparent hover:border-slate-100 dark:hover:border-slate-700" title="Cetak">
-                      <span className="material-symbols-outlined text-[20px]">print</span>
+                      <Printer strokeWidth={2.5} className="w-4 h-4" />
                     </button>
                   </div>
                 </td>
@@ -68,7 +69,7 @@ export default function InvoicesTable({ invoices }: InvoicesTableProps) {
       {invoices.length === 0 && (
         <div className="text-center py-20 flex flex-col items-center">
           <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800/50 rounded-full flex items-center justify-center mb-4 text-slate-200 dark:text-slate-700">
-             <span className="material-symbols-outlined text-[48px]">receipt_long</span>
+             <Receipt strokeWidth={2.5} className="w-10 h-10" />
           </div>
           <p className="text-slate-400 font-bold text-sm tracking-wide">Belum ada invoice yang diterbitkan</p>
         </div>

@@ -3,6 +3,7 @@
 import { useAuth } from '@/lib/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Menu, Search, ArrowRightLeft, ShieldCheck, FileEdit, Wallet, User, Bell, UserCircle, Lock, LogOut } from 'lucide-react';
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -38,15 +39,13 @@ export default function Header({ onMenuClick }: HeaderProps) {
           onClick={onMenuClick}
           className="md:hidden p-2 hover:bg-surface-container rounded-full transition flex-shrink-0"
         >
-          <span className="material-symbols-outlined text-on-surface">menu</span>
+          <Menu strokeWidth={2.5} className="w-5 h-5 text-on-surface" />
         </button>
 
         {/* Search Bar - Hidden on mobile */}
         <div className="hidden sm:flex flex-1 max-w-md ml-2 md:ml-0">
           <div className="relative w-full">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-xl">
-              search
-            </span>
+            <Search strokeWidth={2.5} className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl" />
             <input
               type="text"
               placeholder="Search community records..."
@@ -65,7 +64,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
             onClick={() => setShowRoleSwitcher(!showRoleSwitcher)}
             className="hidden lg:flex items-center gap-2 px-4 py-1.5 bg-primary dark:bg-primary-container text-on-primary rounded-full text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-md"
           >
-            <span className="material-symbols-outlined text-[16px]">swap_horiz</span>
+            <ArrowRightLeft strokeWidth={2.5} className="w-4 h-4" />
             Ganti Peran Demo
           </button>
           
@@ -77,10 +76,10 @@ export default function Header({ onMenuClick }: HeaderProps) {
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Pilih Peran Simulasi</p>
                 </div>
                 {[
-                  { id: 'rt', label: 'Ketua RT', icon: 'shield_person' },
-                  { id: 'sekretaris', label: 'Sekretaris', icon: 'edit_document' },
-                  { id: 'bendahara', label: 'Bendahara', icon: 'account_balance_wallet' },
-                  { id: 'warga', label: 'Warga', icon: 'person' },
+                  { id: 'rt', label: 'Ketua RT', icon: ShieldCheck },
+                  { id: 'sekretaris', label: 'Sekretaris', icon: FileEdit },
+                  { id: 'bendahara', label: 'Bendahara', icon: Wallet },
+                  { id: 'warga', label: 'Warga', icon: User },
                 ].map((r) => (
                   <button
                     key={r.id}
@@ -91,7 +90,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
                         : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
                     }`}
                   >
-                    <span className="material-symbols-outlined text-[18px]">{r.icon}</span>
+                    <r.icon strokeWidth={2.5} className="w-4 h-4" />
                     {r.label}
                   </button>
                 ))}
@@ -102,7 +101,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
         {/* Notifications */}
         <button className="relative p-2 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 text-slate-500 rounded-full transition-colors hidden sm:block">
-          <span className="material-symbols-outlined">notifications</span>
+          <Bell strokeWidth={2.5} className="w-5 h-5" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
         </button>
 
@@ -126,7 +125,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
             </div>
             
             <div className="h-8 w-8 md:h-10 md:w-10 rounded-full overflow-hidden border-2 border-primary-container bg-surface-container flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary-container text-lg md:text-xl">person</span>
+              <User strokeWidth={2.5} className="text-primary-container w-5 h-5" />
             </div>
           </button>
 
@@ -143,11 +142,11 @@ export default function Header({ onMenuClick }: HeaderProps) {
 
                 <div className="py-1">
                   <button className="w-full text-left px-4 py-2 hover:bg-surface-container text-sm text-on-surface/70 flex items-center gap-3 transition-colors">
-                    <span className="material-symbols-outlined text-[18px]">account_circle</span>
+                    <UserCircle strokeWidth={2.5} className="w-4 h-4" />
                     Profil Saya
                   </button>
                   <button className="w-full text-left px-4 py-2 hover:bg-surface-container text-sm text-on-surface/70 flex items-center gap-3 transition-colors">
-                    <span className="material-symbols-outlined text-[18px]">lock</span>
+                    <Lock strokeWidth={2.5} className="w-4 h-4" />
                     Ubah Password
                   </button>
                 </div>
@@ -159,7 +158,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 hover:bg-error-container/50 text-sm text-error flex items-center gap-3 transition-colors font-medium"
                   >
-                    <span className="material-symbols-outlined text-[18px]">logout</span>
+                    <LogOut strokeWidth={2.5} className="w-4 h-4" />
                     Keluar
                   </button>
                 </div>

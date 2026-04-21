@@ -31,8 +31,14 @@ export async function apiClient(endpoint: string, options: RequestOptions = {}) 
   const responseData = await response.json().catch(() => ({}));
 
   if (!response.ok) {
+    if (response.status === 401 && typeof window !== 'undefined') {
+      // Global 401 handling
+      localStorage.removeItem('token');
+      localStorage.removeItem('civic_user');
+      window.location.href = '/login';
+    }
     // Lemparkan error agar bisa di-catch oleh caller
-    throw new Error(responseData.error || responseData.message || 'An error occurred');
+    throw new Error(responseData.error || responseData.message || `An error occurred (${response.status})`);
   }
 
   return responseData;

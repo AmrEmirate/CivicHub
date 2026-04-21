@@ -4,21 +4,19 @@ import { apiClient } from '@/lib/api/api-client';
 
 export const memberService = {
   // Fetch all members with pagination
-  async getMembers(params: PaginationParams): Promise<MembersResponse> {
-    const rawData = await apiClient(`/warga`);
-    const dataArray = Array.isArray(rawData) ? rawData : [];
+  async getMembers(params: PaginationParams & { search?: string, status?: string }): Promise<MembersResponse> {
+    let url = `/warga?page=${params.page}&limit=${params.limit}`;
+    if (params.search) url += `&search=${encodeURIComponent(params.search)}`;
+    if (params.status && params.status !== 'semua') url += `&status=${encodeURIComponent(params.status)}`;
     
-    // Simulate pagination locally since BE doesn't support it yet
-    const startIndex = (params.page - 1) * params.limit;
-    const endIndex = startIndex + params.limit;
-    const paginatedData = dataArray.slice(startIndex, endIndex);
-
+    const response = await apiClient(url);
+    
     return {
-      data: paginatedData,
-      total: dataArray.length,
+      data: response.data || [],
+      total: response.total || 0,
       page: params.page,
       limit: params.limit,
-      totalPages: Math.ceil(dataArray.length / params.limit),
+      totalPages: Math.ceil((response.total || 0) / params.limit),
     };
   },
 
@@ -72,7 +70,6 @@ export const memberService = {
 
   // Search members
   async searchMembers(query: string, params: PaginationParams): Promise<MembersResponse> {
-    const data = await apiClient(`/warga?search=${encodeURIComponent(query)}&page=${params.page}&limit=${params.limit}`);
-    return data;
+    return this.getMembers({ ...params, search: query });
   },
 };

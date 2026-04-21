@@ -1,4 +1,5 @@
 import { UserRole } from '@/lib/types/common';
+import { LayoutDashboard, Users, Wallet, FileText, Megaphone } from 'lucide-react';
 
 export const ROLE_LABELS: Record<UserRole, string> = {
   rt: 'RT / Ketua',
@@ -29,31 +30,31 @@ export const SIDEBAR_MODULES = [
   { 
     id: 'dashboard', 
     label: 'Dashboard', 
-    icon: 'dashboard', 
+    icon: LayoutDashboard, 
     roles: ['rt', 'wakil_rt', 'sekretaris', 'bendahara', 'warga'] 
   },
   { 
     id: 'members', 
     label: 'Data Kependudukan', 
-    icon: 'badge', 
+    icon: Users, 
     roles: ['rt', 'wakil_rt', 'sekretaris'] 
   },
   { 
     id: 'financial', 
     label: 'Kas & Keuangan', 
-    icon: 'account_balance_wallet', 
+    icon: Wallet, 
     roles: ['rt', 'wakil_rt', 'bendahara', 'warga'] 
   },
   { 
     id: 'documents', 
     label: 'Laporan & LPJ', 
-    icon: 'summarize', 
+    icon: FileText, 
     roles: ['rt', 'wakil_rt', 'bendahara'] 
   },
   { 
     id: 'announcements', 
     label: 'Pengumuman', 
-    icon: 'campaign', 
+    icon: Megaphone, 
     roles: ['rt', 'wakil_rt', 'sekretaris', 'bendahara', 'warga'] 
   },
 ];

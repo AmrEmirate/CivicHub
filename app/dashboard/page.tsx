@@ -8,6 +8,10 @@ import { MembersStats } from '@/lib/types/member';
 import { FinancialStats } from '@/lib/types/financial';
 import { Announcement } from '@/lib/types/announcement';
 import { useAuth } from '@/lib/context/auth-context';
+import { 
+  FileText, PlusCircle, Wallet, TrendingUp, HandCoins, 
+  MoreHorizontal, Bell, Info 
+} from 'lucide-react';
 
 export default function DashboardPage() {
   const [membersStats, setMembersStats] = useState<MembersStats | null>(null);
@@ -42,7 +46,7 @@ export default function DashboardPage() {
     return (
       <div className="flex w-full h-[60vh] items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-cyan-200 border-t-cyan-700 rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-cyan-200 border-t-primary rounded-full animate-spin"></div>
           <p className="text-slate-500 font-inter text-sm font-medium animate-pulse">Menyiapkan Dashboard...</p>
         </div>
       </div>
@@ -54,25 +58,26 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8 w-full animate-in fade-in duration-500">
+    <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
       {/* Welcome Banner */}
-      <div className="glass-panel p-8 rounded-3xl relative overflow-hidden custom-shadow border border-outline-variant/30 text-white">
-        {/* Background gradient injection */}
-        <div className="absolute inset-0 primary-gradient z-0"></div>
-
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
+      <div className="relative overflow-hidden rounded-3xl border border-white/40 bg-gradient-to-br from-primary/95 to-primary-container p-8 shadow-2xl shadow-primary/20 text-white isolate">
+        {/* Decorative ambient blurred shapes */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-300/20 rounded-full blur-3xl -z-10 mix-blend-overlay pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
+        <div className="absolute bottom-0 left-10 w-48 h-48 bg-emerald-300/20 rounded-full blur-2xl -z-10 mix-blend-overlay pointer-events-none transform -translate-y-1/2"></div>
+        
+        <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-2">
             <h1 className="font-headline text-3xl font-extrabold tracking-tight">Selamat datang, {user?.name || 'Administrator'}! 👋</h1>
-            <p className="font-inter text-cyan-100 mt-2 max-w-xl text-sm leading-relaxed">
-              Ini adalah ringkasan operasional Civic Hub hari ini. Saldo kas dalam kondisi sehat, ada {financialStats?.invoicesTunggakan || 0} tagihan yang butuh perhatian.
+            <p className="font-inter text-cyan-50/90 max-w-2xl text-sm leading-relaxed">
+              Ini adalah ringkasan operasional Civic Hub hari ini. Saldo kas saat ini berada dalam kondisi sehat, ada {financialStats?.invoicesTunggakan || 0} tagihan yang masih membutuhkan perhatian.
             </p>
           </div>
-          <div className="flex gap-4">
-            <button className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-semibold text-sm transition-colors border border-white/30 flex items-center shadow-lg">
-              <span className="material-symbols-outlined mr-2 text-[18px]">receipt_long</span> Laporan
+          <div className="flex flex-wrap gap-3">
+            <button className="px-5 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl font-semibold text-sm transition-all border border-white/20 flex items-center shadow-lg active:scale-95 group">
+              <FileText strokeWidth={2.5} className="w-4 h-4 mr-2 group-hover:text-amber-200 transition-colors" /> Laporan
             </button>
-            <button className="px-6 py-3 bg-white text-primary rounded-xl font-bold text-sm shadow-xl shadow-black/10 hover:scale-105 transition-transform flex items-center">
-              <span className="material-symbols-outlined mr-2 text-[18px]">add_circle</span> Entri Baru
+            <button className="px-5 py-2.5 bg-white text-primary rounded-2xl font-bold text-sm shadow-xl shadow-black/10 hover:scale-105 active:scale-95 transition-all flex items-center group">
+              <PlusCircle strokeWidth={3} className="w-4 h-4 mr-2 text-cyan-600 group-hover:rotate-90 transition-transform duration-300" /> Entri Baru
             </button>
           </div>
         </div>
@@ -84,128 +89,92 @@ export default function DashboardPage() {
           
           {/* Financial Summary Bento */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="glass-panel p-6 rounded-3xl flex flex-col justify-between">
-              <div className="flex justify-between items-start mb-6">
-                <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-primary-fixed-dim">
-                  <span className="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+            <div className="group bg-card p-6 rounded-3xl flex flex-col justify-between border border-outline-variant/30 shadow-sm hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -z-0"></div>
+              <div className="flex justify-between items-start mb-6 relative z-10">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 group-hover:scale-110 transition-transform">
+                  <Wallet strokeWidth={2.5} className="w-6 h-6" />
                 </div>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant bg-surface-container-lowest px-2 py-1 rounded-md">Total Kas</span>
+                <span className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant bg-surface-variant px-2 py-1 rounded-lg">Total Kas</span>
               </div>
-              <div>
-                <h3 className="font-headline text-2xl font-black text-on-surface">
+              <div className="relative z-10">
+                <h3 className="font-headline text-3xl font-black text-on-surface tracking-tight">
                   {financialStats ? formatIDR(financialStats.saldo) : 'Rp 0'}
                 </h3>
-                <p className="text-xs text-on-surface-variant font-medium mt-1">Saldo akhir operasional RT</p>
+                <p className="text-xs text-outline font-medium mt-1">Saldo akhir operasional RT</p>
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-3xl flex flex-col justify-between group">
-              <div className="flex justify-between items-start mb-6">
-                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white group-hover:scale-110 transition-transform shadow-md">
-                  <span className="material-symbols-outlined text-[20px]">trending_up</span>
+            <div className="group bg-card p-6 rounded-3xl flex flex-col justify-between border border-outline-variant/30 shadow-sm hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-bl-full -z-0"></div>
+              <div className="flex justify-between items-start mb-6 relative z-10">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center text-white border border-emerald-400 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-md shadow-emerald-500/30">
+                  <TrendingUp strokeWidth={2.5} className="w-6 h-6" />
                 </div>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-800 bg-emerald-100 px-2 py-1 rounded-md">+4.2%</span>
+                <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-700 bg-emerald-100 px-2 py-1 rounded-lg">+4.2%</span>
               </div>
-              <div>
-                <h3 className="font-headline text-2xl font-black text-on-surface">
+              <div className="relative z-10">
+                <h3 className="font-headline text-2xl font-black text-on-surface tracking-tight">
                   {financialStats ? formatIDR(financialStats.totalPemasukan) : 'Rp 0'}
                 </h3>
-                <p className="text-xs text-on-surface-variant font-medium mt-1">Pemasukan bulan ini</p>
+                <p className="text-xs text-outline font-medium mt-1">Pemasukan bulan ini</p>
               </div>
             </div>
 
-            <div className="glass-panel p-6 rounded-3xl flex flex-col justify-between">
-              <div className="flex justify-between items-start mb-6">
-                <div className="w-10 h-10 rounded-full bg-rose-500 flex items-center justify-center text-white">
-                  <span className="material-symbols-outlined text-[20px]">payments</span>
+            <div className="group bg-card p-6 rounded-3xl flex flex-col justify-between border border-outline-variant/30 shadow-sm hover:shadow-lg hover:shadow-rose-500/5 transition-all duration-300 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/5 rounded-bl-full -z-0"></div>
+              <div className="flex justify-between items-start mb-6 relative z-10">
+                <div className="w-12 h-12 rounded-2xl bg-rose-500 flex items-center justify-center text-white border border-rose-400 group-hover:scale-110 group-hover:-rotate-6 transition-all shadow-md shadow-rose-500/30">
+                  <HandCoins strokeWidth={2.5} className="w-6 h-6" />
                 </div>
               </div>
-              <div>
-                <h3 className="font-headline text-2xl font-black text-on-surface">
+              <div className="relative z-10">
+                <h3 className="font-headline text-2xl font-black text-on-surface tracking-tight">
                   {financialStats ? formatIDR(financialStats.totalPengeluaran) : 'Rp 0'}
                 </h3>
-                <p className="text-xs text-on-surface-variant font-medium mt-1">Pengeluaran bulan ini</p>
+                <p className="text-xs text-outline font-medium mt-1">Pengeluaran bulan ini</p>
               </div>
-            </div>
-          </div>
-
-          {/* Aesthetic Mock Graph (Tunggakan Iuran) */}
-          <div className="glass-panel p-6 rounded-3xl custom-shadow border border-outline-variant/30">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="font-headline font-bold text-lg text-cyan-950 dark:text-cyan-50">Analisis Tunggakan Iuran</h2>
-                <p className="text-xs text-slate-500 mt-1">Estimasi tunggakan warga per blok wilayah (Ribuan Rp)</p>
-              </div>
-              <button className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors">
-                <span className="material-symbols-outlined text-[18px]">more_horiz</span>
-              </button>
-            </div>
-            
-            {/* Minimalist HTML Graph Mockup */}
-            <div className="relative h-48 w-full flex items-end justify-between px-2 gap-2 mt-4">
-              {/* Background Grid Lines */}
-              <div className="absolute inset-0 flex flex-col justify-between z-0 pointer-events-none">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="w-full border-t border-slate-200/50 dark:border-slate-800/50 border-dashed h-0"></div>
-                ))}
-              </div>
-              
-              {/* Bars */}
-              {[40, 75, 45, 90, 60, 30, 85].map((h, i) => (
-                <div key={i} className="relative z-10 w-full bg-cyan-100 dark:bg-cyan-900/20 rounded-t-lg mx-1 group flex flex-col justify-end h-full">
-                  <div 
-                    className="w-full primary-gradient rounded-t-sm transition-all duration-700 ease-out relative group-hover:opacity-90"
-                    style={{ height: `${h}%` }}
-                  >
-                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] font-bold py-1 px-3 rounded shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                      {h * 15} rb
-                    </div>
-                  </div>
-                  <div className="absolute -bottom-6 w-full text-center text-[10px] font-semibold text-slate-400">Blok {['A','B','C','D','E','F','G'][i]}</div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-10 flex gap-4 text-xs font-medium text-slate-500 border-t border-slate-100 dark:border-slate-800 pt-4">
-              <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-primary"></div> Iuran Wajib</div>
-              <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-cyan-200"></div> Donasi Sukarela</div>
             </div>
           </div>
 
           {/* Ledger Table Mockup */}
-          <div className="glass-panel rounded-3xl custom-shadow border border-outline-variant/30 overflow-hidden">
-            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+          <div className="bg-card rounded-3xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-outline-variant/20 flex justify-between items-center bg-card">
               <div>
-                <h2 className="font-headline font-bold text-lg text-cyan-950 dark:text-cyan-50">Laporan Ledger Terakhir</h2>
-                <p className="text-xs text-slate-500 mt-1">Mutasi transaksi operasional RT</p>
+                <h2 className="font-headline font-extrabold text-lg text-on-surface">Laporan Transaksi Terakhir</h2>
+                <p className="text-xs text-outline mt-1 font-medium">Mutasi mutakhir kas operasional CivicHub</p>
               </div>
-              <span className="text-blue-600 text-sm font-semibold cursor-pointer hover:underline">Lihat Semua</span>
+              <button className="text-primary text-sm font-bold cursor-pointer hover:underline underline-offset-4 focus:outline-none">
+                Semua Transaksi
+              </button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
-                <thead className="text-[10px] uppercase text-slate-400 bg-slate-50/50 dark:bg-slate-800/30 font-semibold tracking-wider">
+                <thead className="text-[10px] uppercase text-outline bg-surface-container/50 font-bold tracking-widest">
                   <tr>
-                    <th className="px-6 py-4 rounded-tl-lg">ID Transaksi</th>
+                    <th className="px-6 py-4">ID Transaksi</th>
                     <th className="px-6 py-4">Kategori</th>
                     <th className="px-6 py-4">Tanggal</th>
-                    <th className="px-6 py-4 text-right rounded-tr-lg">Nominal (Rp)</th>
+                    <th className="px-6 py-4 text-right">Nominal (Rp)</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50 font-inter">
+                <tbody className="divide-y divide-outline-variant/20 font-inter">
                   {[
-                    { id: 'TRX-V2-0091', kat: 'Iuran Sampah', date: '04 Apr 2026', nom: '+ 4.500.000', pos: true },
-                    { id: 'TRX-V2-0090', kat: 'Honor Security', date: '01 Apr 2026', nom: '- 3.200.000', pos: false },
-                    { id: 'TRX-V2-0089', kat: 'Donasi Masjid', date: '28 Mar 2026', nom: '+ 1.250.000', pos: true },
-                    { id: 'TRX-V2-0088', kat: 'Perawatan Cctv', date: '25 Mar 2026', nom: '- 850.000', pos: false },
+                    { id: 'TRX-2026-0091', kat: 'Iuran Sampah', date: '04 Apr 2026', nom: '+ 4.500.000', pos: true },
+                    { id: 'TRX-2026-0090', kat: 'Honor Security', date: '01 Apr 2026', nom: '- 3.200.000', pos: false },
+                    { id: 'TRX-2026-0089', kat: 'Donasi Masjid', date: '28 Mar 2026', nom: '+ 1.250.000', pos: true },
+                    { id: 'TRX-2026-0088', kat: 'Perawatan CCTV', date: '25 Mar 2026', nom: '- 850.000', pos: false },
                   ].map((row, i) => (
-                    <tr key={i} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition-colors">
-                      <td className="px-6 py-4 font-bold text-slate-700 dark:text-slate-300">{row.id}</td>
+                    <tr key={i} className="hover:bg-surface-container/50 transition-colors group">
+                      <td className="px-6 py-4 font-bold text-on-surface">{row.id}</td>
                       <td className="px-6 py-4">
-                        <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                        <span className="px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-surface-container border border-outline-variant/30 text-on-surface-variant flex items-center inline-flex gap-1.5">
+                          <div className={`w-1.5 h-1.5 rounded-full ${row.pos ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
                           {row.kat}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-slate-500 font-medium">{row.date}</td>
-                      <td className={`px-6 py-4 text-right font-bold ${row.pos ? 'text-emerald-500' : 'text-slate-700 dark:text-slate-300'}`}>
+                      <td className="px-6 py-4 text-outline font-medium">{row.date}</td>
+                      <td className={`px-6 py-4 text-right font-bold ${row.pos ? 'text-emerald-600' : 'text-on-surface'}`}>
                         {row.nom}
                       </td>
                     </tr>
@@ -220,55 +189,74 @@ export default function DashboardPage() {
         <div className="flex flex-col gap-6">
           
           {/* Notifications Panel */}
-          <div className="glass-panel p-6 rounded-3xl custom-shadow border border-outline-variant/30">
+          <div className="bg-card p-6 rounded-3xl border border-outline-variant/30 shadow-sm flex flex-col h-full">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="font-headline font-bold text-lg text-cyan-950 dark:text-cyan-50">Notifikasi Penting</h2>
-              <span className="bg-error-container text-error text-[10px] font-bold px-2 py-1 rounded-md">2 BARU</span>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-error-container text-error flex items-center justify-center">
+                  <Bell className="w-4 h-4" />
+                </div>
+                <h2 className="font-headline font-extrabold text-lg text-on-surface">Papan Informasi</h2>
+              </div>
+              <span className="bg-error text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md shadow-error/20">BARU</span>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-4 flex-grow">
               {announcements.length > 0 ? announcements.slice(0, 3).map((annc, i) => (
-                <div key={annc.id} className="group cursor-pointer">
+                <div key={annc.id} className="group cursor-pointer p-3 -mx-3 hover:bg-surface-container rounded-2xl transition-colors">
                   <div className="flex gap-3">
-                    <div className="w-2 h-2 mt-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--primary)] shrink-0"></div>
+                    <div className="w-1.5 h-1.5 mt-2.5 rounded-full bg-primary shadow-[0_0_8px_var(--primary)] shrink-0 group-hover:scale-150 transition-transform"></div>
                     <div>
-                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">{annc.title}</p>
-                      <p className="text-xs text-slate-500 mt-1 line-clamp-2">{annc.content}</p>
-                      <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider mt-2 block">{new Date(annc.createdAt).toLocaleDateString('id-ID')}</span>
+                      <p className="text-sm font-bold text-on-surface group-hover:text-primary transition-colors leading-tight">{annc.title}</p>
+                      <p className="text-xs text-outline mt-1.5 line-clamp-2 leading-relaxed">{annc.content}</p>
+                      <span className="text-[10px] text-outline/80 font-bold uppercase tracking-wider mt-2.5 block flex items-center">
+                        <Info className="w-3 h-3 mr-1" /> {new Date(annc.createdAt).toLocaleDateString('id-ID')}
+                      </span>
                     </div>
                   </div>
-                  {i < announcements.length - 1 && <div className="border-t border-slate-100 dark:border-slate-800 my-4 ml-5"></div>}
                 </div>
               )) : (
-                <div className="text-sm text-slate-500 text-center py-4">Belum ada pengumuman terbaru</div>
+                <div className="flex flex-col items-center justify-center h-48 text-center text-outline">
+                  <Bell strokeWidth={1} className="w-10 h-10 mb-3 text-outline-variant opacity-50" />
+                  <p className="text-sm font-semibold">Belum ada pengumuman</p>
+                  <p className="text-xs text-outline/70 mt-1">Area Anda tenang untuk hari ini.</p>
+                </div>
               )}
             </div>
-            <button className="w-full mt-6 py-2.5 rounded-xl border-2 border-slate-100 dark:border-slate-800 text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+            <button className="w-full mt-6 py-3 rounded-xl border border-outline-variant/50 text-xs font-bold text-on-surface-variant hover:bg-surface-container active:scale-95 transition-all shadow-sm">
               Lihat Pusat Pesan
             </button>
           </div>
 
           {/* Members Stats Grid */}
           {membersStats && (
-            <div className="glass-panel p-6 rounded-3xl custom-shadow border border-outline-variant/30 bg-primary text-white relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-8 translate-x-8"></div>
-              <h2 className="font-headline font-bold text-lg mb-6 relative z-10 text-white">Statistik Warga</h2>
-              <div className="grid grid-cols-2 gap-4 relative z-10">
-                <div className="p-4 bg-white/10 rounded-2xl border border-white/20 transition-colors">
-                  <span className="text-4xl font-black">{membersStats.totalKK}</span>
-                  <p className="text-[10px] uppercase tracking-widest text-white/80 font-bold mt-1">Total KK</p>
+            <div className="bg-gradient-to-br from-primary to-primary-container p-6 rounded-3xl shadow-lg border border-primary/20 text-white relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-8 translate-x-8 group-hover:bg-white/20 transition-colors duration-700"></div>
+              <div className="absolute bottom-0 left-0 w-40 h-40 bg-cyan-400/10 rounded-full blur-3xl translate-y-12 -translate-x-4 pointer-events-none"></div>
+              
+              <h2 className="font-headline font-extrabold text-lg mb-6 relative z-10 text-white tracking-tight flex items-center">
+                Statistik Kependudukan
+              </h2>
+              
+              <div className="grid grid-cols-2 gap-3 relative z-10">
+                <div className="p-4 bg-white/[0.08] hover:bg-white/[0.12] rounded-2xl border border-white/10 transition-colors backdrop-blur-sm">
+                  <span className="text-4xl font-black tabular-nums">{membersStats.totalKK}</span>
+                  <p className="text-[10px] uppercase tracking-widest text-cyan-50 font-semibold mt-1">Total KK</p>
                 </div>
-                <div className="p-4 bg-white/10 rounded-2xl border border-white/20 transition-colors">
-                  <span className="text-4xl font-black">{membersStats.totalWarga}</span>
-                  <p className="text-[10px] uppercase tracking-widest text-white/80 font-bold mt-1">Jiwa Warga</p>
+                <div className="p-4 bg-white/[0.08] hover:bg-white/[0.12] rounded-2xl border border-white/10 transition-colors backdrop-blur-sm">
+                  <span className="text-4xl font-black tabular-nums">{membersStats.totalWarga}</span>
+                  <p className="text-[10px] uppercase tracking-widest text-cyan-50 font-semibold mt-1">Jiwa Warga</p>
                 </div>
-                <div className="p-4 bg-white/10 rounded-2xl border border-white/20 transition-colors">
-                  <span className="text-2xl font-bold">{membersStats.hunianMilik}</span>
-                  <p className="text-[10px] uppercase tracking-widest text-white/80 font-bold mt-1">Milik Pribadi</p>
+                <div className="p-4 bg-white/[0.08] hover:bg-white/[0.12] rounded-2xl border border-white/10 transition-colors backdrop-blur-sm">
+                  <span className="text-2xl font-bold tabular-nums">{membersStats.hunianMilik}</span>
+                  <p className="text-[10px] uppercase tracking-widest text-emerald-200 font-semibold mt-1 flex items-center">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span> Milik Pribadi
+                  </p>
                 </div>
-                <div className="p-4 bg-white/10 rounded-2xl border border-white/20 transition-colors">
-                  <span className="text-2xl font-bold">{membersStats.hunianSewa}</span>
-                  <p className="text-[10px] uppercase tracking-widest text-white/80 font-bold mt-1">Sewa / Kontrak</p>
+                <div className="p-4 bg-white/[0.08] hover:bg-white/[0.12] rounded-2xl border border-white/10 transition-colors backdrop-blur-sm">
+                  <span className="text-2xl font-bold tabular-nums">{membersStats.hunianSewa}</span>
+                  <p className="text-[10px] uppercase tracking-widest text-amber-200 font-semibold mt-1 flex items-center">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5"></span> Sewa/Kontrak
+                  </p>
                 </div>
               </div>
             </div>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { memberService } from '@/lib/services/member-service';
 import { CreateMemberInput } from '@/lib/types/member';
+import { X, AlertCircle, CheckCircle2, Home, FileSignature, UserPlus } from 'lucide-react';
 
 interface AddMemberModalProps {
   onClose: () => void;
@@ -61,7 +62,7 @@ export default function AddMemberModal({ onClose, onSuccess }: AddMemberModalPro
             onClick={onClose}
             className="w-10 h-10 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400 transition-colors"
           >
-            <span className="material-symbols-outlined text-[24px]">close</span>
+            <X strokeWidth={2.5} className="w-6 h-6" />
           </button>
         </div>
 
@@ -69,7 +70,7 @@ export default function AddMemberModal({ onClose, onSuccess }: AddMemberModalPro
         <form onSubmit={handleSubmit} className="p-8 space-y-5 overflow-y-auto">
           {error && (
             <div className="bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800 text-rose-600 dark:text-rose-400 rounded-2xl p-4 text-sm font-bold flex items-center gap-3">
-              <span className="material-symbols-outlined text-[20px]">error</span>
+              <AlertCircle strokeWidth={2.5} className="w-5 h-5" />
               {error}
             </div>
           )}
@@ -82,7 +83,7 @@ export default function AddMemberModal({ onClose, onSuccess }: AddMemberModalPro
                 <label className="text-[10px] uppercase font-bold tracking-widest text-slate-400">Nomor Kartu Keluarga (KK)</label>
                 {formData.kkNumber.length === 16 && (
                   <span className="flex items-center gap-1 text-[10px] font-black text-emerald-500 uppercase tracking-widest animate-in fade-in slide-in-from-right-2">
-                    <span className="material-symbols-outlined text-[14px]">check_circle</span> Valid (16 Digit)
+                    <CheckCircle2 strokeWidth={3} className="w-4 h-4" /> Valid (16 Digit)
                   </span>
                 )}
               </div>
@@ -205,7 +206,7 @@ export default function AddMemberModal({ onClose, onSuccess }: AddMemberModalPro
                       ? 'border-primary bg-cyan-50/50 dark:bg-cyan-950/20 text-cyan-700 dark:text-cyan-400'
                       : 'border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 text-slate-400 group-hover:border-slate-200'
                   }`}>
-                    <span className="material-symbols-outlined">home</span>
+                    <Home strokeWidth={2.5} className="w-6 h-6 mb-1" />
                     <span className="text-xs font-bold uppercase tracking-wider">Milik Sendiri</span>
                   </div>
                 </label>
@@ -223,7 +224,7 @@ export default function AddMemberModal({ onClose, onSuccess }: AddMemberModalPro
                       ? 'border-primary bg-cyan-50/50 dark:bg-cyan-950/20 text-cyan-700 dark:text-cyan-400'
                       : 'border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 text-slate-400 group-hover:border-slate-200'
                   }`}>
-                    <span className="material-symbols-outlined">contract</span>
+                    <FileSignature strokeWidth={2.5} className="w-6 h-6 mb-1" />
                     <span className="text-xs font-bold uppercase tracking-wider">Sewa / Kontrak</span>
                   </div>
                 </label>
@@ -250,7 +251,7 @@ export default function AddMemberModal({ onClose, onSuccess }: AddMemberModalPro
             {isSubmitting ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
             ) : (
-              <span className="material-symbols-outlined text-[20px]">person_add</span>
+              <UserPlus strokeWidth={2.5} className="w-5 h-5" />
             )}
             {isSubmitting ? 'Menyimpan...' : 'Simpan Data Warga'}
           </button>

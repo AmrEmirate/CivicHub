@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { announcementService } from '@/lib/services/announcement-service';
 import { CreateAnnouncementInput } from '@/lib/types/announcement';
+import { X, AlertCircle, Send } from 'lucide-react';
 
 interface AddAnnouncementModalProps {
   onClose: () => void;
@@ -75,7 +76,7 @@ export default function AddAnnouncementModal({ onClose, onSuccess }: AddAnnounce
             onClick={onClose}
             className="w-10 h-10 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400 transition-colors"
           >
-            <span className="material-symbols-outlined text-[24px]">close</span>
+            <X strokeWidth={2.5} className="w-5 h-5" />
           </button>
         </div>
 
@@ -83,7 +84,7 @@ export default function AddAnnouncementModal({ onClose, onSuccess }: AddAnnounce
         <form onSubmit={handleSubmit} className="p-8 space-y-6 overflow-y-auto">
           {error && (
             <div className="bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-800 text-rose-600 dark:text-rose-400 rounded-2xl p-4 text-sm font-bold flex items-center gap-3">
-              <span className="material-symbols-outlined text-[20px]">error</span>
+              <AlertCircle strokeWidth={2.5} className="w-5 h-5" />
               {error}
             </div>
           )}
@@ -153,7 +154,7 @@ export default function AddAnnouncementModal({ onClose, onSuccess }: AddAnnounce
                       onClick={() => handleRemoveTag(tag)}
                       className="text-cyan-300 hover:text-rose-500 transition-colors"
                     >
-                      <span className="material-symbols-outlined text-[16px]">close</span>
+                      <X strokeWidth={3} className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
@@ -180,7 +181,7 @@ export default function AddAnnouncementModal({ onClose, onSuccess }: AddAnnounce
             {isSubmitting ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
             ) : (
-              <span className="material-symbols-outlined text-[20px]">send</span>
+              <Send strokeWidth={2.5} className="w-4 h-4" />
             )}
             {isSubmitting ? 'Memproses...' : 'Terbitkan Pengumuman'}
           </button>

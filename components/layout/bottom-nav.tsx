@@ -40,12 +40,7 @@ export default function BottomNav() {
                 : 'text-slate-400 dark:text-slate-500'
             }`}
           >
-            <span 
-              className="material-symbols-outlined" 
-              style={active ? { fontVariationSettings: "'FILL' 1" } : undefined}
-            >
-              {module.icon}
-            </span>
+            <module.icon strokeWidth={active ? 2.5 : 2} className={`w-6 h-6 transition-all ${active ? 'scale-110' : ''}`} />
             <span className="text-[10px] font-semibold uppercase tracking-wider mt-1 whitespace-nowrap">
               {module.label.split(' ')[0]} {/* Shorten label for mobile */}
             </span>

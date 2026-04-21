@@ -1,10 +1,13 @@
 'use client';
 
+import { ElementType } from 'react';
+import { BarChart3, TrendingUp, TrendingDown } from 'lucide-react';
+
 interface StatCardProps {
   label: string;
   value: string | number;
   trend?: string;
-  icon?: string;
+  icon?: ElementType;
   color?: string;
   showProgress?: boolean;
   progressValue?: number;
@@ -44,9 +47,10 @@ export function StatCard({
         </div>
 
         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border transition-transform group-hover:scale-110 group-hover:rotate-3 ${getIconColor()}`}>
-          <span className="material-symbols-outlined text-[24px]">
-            {icon || 'analytics'}
-          </span>
+          {icon ? (() => { 
+            const Icon = icon;
+            return <Icon strokeWidth={2.5} className="w-6 h-6" />; 
+          })() : <BarChart3 strokeWidth={2.5} className="w-6 h-6" />}
         </div>
       </div>
 
@@ -71,9 +75,7 @@ export function StatCard({
                 ? 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-900/20 dark:border-emerald-800' 
                 : 'bg-rose-50 text-rose-600 border-rose-100 dark:bg-rose-900/20 dark:border-rose-800'
             }`}>
-              <span className="material-symbols-outlined text-[14px]">
-                {trend.startsWith('+') ? 'trending_up' : 'trending_down'}
-              </span>
+              {trend.startsWith('+') ? <TrendingUp strokeWidth={2.5} className="w-3.5 h-3.5" /> : <TrendingDown strokeWidth={2.5} className="w-3.5 h-3.5" />}
               {trend}
             </div>
             <span className="text-[10px] font-bold text-on-surface/50 transition-opacity opacity-0 group-hover:opacity-100 uppercase tracking-tighter">vs Bulan Lalu</span>

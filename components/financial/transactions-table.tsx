@@ -2,6 +2,7 @@
 
 import { Transaction } from '@/lib/types/financial';
 import { formatCurrency, formatDate } from '@/lib/utils/formatters';
+import { ArrowDownLeft, ArrowUpRight, History } from 'lucide-react';
 
 interface TransactionsTableProps {
   transactions: Transaction[];
@@ -35,9 +36,9 @@ export default function TransactionsTable({ transactions }: TransactionsTablePro
                            ? 'bg-emerald-50 text-emerald-500 dark:bg-emerald-900/20' 
                            : 'bg-rose-50 text-rose-500 dark:bg-rose-900/20'
                       }`}>
-                         <span className="material-symbols-outlined text-[18px]">
-                            {transaction.type === 'pemasukan' ? 'south_west' : 'north_east'}
-                         </span>
+                         {transaction.type === 'pemasukan' 
+                            ? <ArrowDownLeft strokeWidth={2.5} className="w-4 h-4" /> 
+                            : <ArrowUpRight strokeWidth={2.5} className="w-4 h-4" />}
                       </div>
                       <span className="font-bold text-slate-600 dark:text-slate-300 text-sm line-clamp-1">{transaction.description}</span>
                    </div>
@@ -63,7 +64,7 @@ export default function TransactionsTable({ transactions }: TransactionsTablePro
       {transactions.length === 0 && (
         <div className="text-center py-20 flex flex-col items-center">
           <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800/50 rounded-full flex items-center justify-center mb-4 text-slate-200 dark:text-slate-700">
-             <span className="material-symbols-outlined text-[48px]">history</span>
+             <History strokeWidth={2.5} className="w-8 h-8" />
           </div>
           <p className="text-slate-400 font-bold text-sm tracking-wide">Belum ada riwayat transaksi</p>
         </div>

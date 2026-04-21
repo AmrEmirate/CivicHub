@@ -5,6 +5,7 @@ import { announcementService } from '@/lib/services/announcement-service';
 import { Announcement } from '@/lib/types/announcement';
 import AddAnnouncementModal from '@/components/announcements/add-announcement-modal';
 import { formatDateTime } from '@/lib/utils/formatters';
+import { Megaphone, ChevronRight, PlusCircle, BellOff, Pin, FileText, Trash2 } from 'lucide-react';
 
 export default function AnnouncementsPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
@@ -56,9 +57,9 @@ export default function AnnouncementsPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-slate-400">
-            <span className="material-symbols-outlined text-[16px]">campaign</span>
+            <Megaphone strokeWidth={2.5} className="w-4 h-4" />
             <span>Komunikasi</span>
-            <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+            <ChevronRight strokeWidth={3} className="w-3 h-3" />
             <span className="text-secondary">Pengumuman</span>
           </div>
           <div>
@@ -70,7 +71,7 @@ export default function AnnouncementsPage() {
           onClick={() => setShowAddModal(true)}
           className="px-6 py-2.5 primary-gradient rounded-xl font-bold text-sm text-white shadow-lg shadow-primary/20 hover:-translate-y-0.5 active:scale-[0.98] transition-all flex items-center shrink-0"
         >
-          <span className="material-symbols-outlined mr-2 text-[18px]">add_circle</span> Buat Pengumuman
+          <PlusCircle strokeWidth={2.5} className="w-5 h-5 mr-2" /> Buat Pengumuman
         </button>
       </div>
 
@@ -85,7 +86,7 @@ export default function AnnouncementsPage() {
       ) : announcements.length === 0 ? (
         <div className="glass-panel rounded-3xl p-16 text-center mt-4">
           <div className="w-24 h-24 mx-auto bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-6">
-            <span className="material-symbols-outlined text-5xl text-slate-400">notifications_off</span>
+            <BellOff strokeWidth={2} className="w-12 h-12 text-slate-400" />
           </div>
           <h3 className="text-xl font-bold text-slate-700 dark:text-slate-300 mb-2">Belum Ada Informasi</h3>
           <p className="text-sm text-slate-500 max-w-sm mx-auto">Anda belum membuat pengumuman apapun. Buat pengumuman pertama Anda sekarang.</p>
@@ -106,11 +107,11 @@ export default function AnnouncementsPage() {
                   <div className="flex items-center gap-3">
                     {announcement.isPinned ? (
                       <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/30 shrink-0">
-                         <span className="material-symbols-outlined text-[20px]">push_pin</span>
+                         <Pin strokeWidth={2.5} className="w-5 h-5 fill-white" />
                       </div>
                     ) : (
                       <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center shrink-0">
-                         <span className="material-symbols-outlined text-[20px]">feed</span>
+                         <FileText strokeWidth={2} className="w-5 h-5" />
                       </div>
                     )}
                     <h3 className="text-lg font-bold text-cyan-950 dark:text-cyan-50 line-clamp-2 leading-tight">
@@ -152,14 +153,14 @@ export default function AnnouncementsPage() {
                     }`}
                     title={announcement.isPinned ? 'Lepas Sematan' : 'Sematkan'}
                   >
-                    <span className="material-symbols-outlined text-[18px]">push_pin</span>
+                    <Pin strokeWidth={2.5} className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(announcement.id)}
                     className="p-2 hover:bg-rose-50 dark:hover:bg-rose-900/30 text-slate-400 hover:text-rose-600 rounded-xl transition-colors"
                     title="Hapus"
                   >
-                    <span className="material-symbols-outlined text-[18px]">delete</span>
+                    <Trash2 strokeWidth={2.5} className="w-4 h-4" />
                   </button>
                 </div>
               </div>
