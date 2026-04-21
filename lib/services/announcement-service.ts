@@ -59,4 +59,12 @@ export const announcementService = {
     const res = await this.getAnnouncements({ page: 1, limit: 100 });
     return res.data.filter((a: any) => a.isPinned); // isPinned might not exist in BE DB actually, will just return first 2
   },
+
+  async togglePin(id: string): Promise<Announcement> {
+    const data = await apiClient(`/pengumuman/${id}`, {
+      method: 'PUT',
+      data: { isPinned: true } // Mock updating
+    });
+    return data;
+  },
 };
