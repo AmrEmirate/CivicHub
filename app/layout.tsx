@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Manrope, Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { AuthProvider } from '@/lib/context/auth-context'
+import Script from 'next/script';
 import AppLayout from '@/components/layout/app-layout'
 import './globals.css'
 
@@ -40,6 +41,7 @@ export default function RootLayout({
     <html lang="id" className={`${manrope.variable} ${inter.variable}`} suppressHydrationWarning>
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+        <Script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY} strategy="beforeInteractive" />
       </head>
       <body className="font-body antialiased bg-surface text-on-surface flex flex-col min-h-screen relative w-full">
         <AuthProvider>

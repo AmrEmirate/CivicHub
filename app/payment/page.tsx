@@ -1,22 +1,59 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/context/auth-context';
+import { useSearchParams } from 'next/navigation';
+import { financialService } from '@/lib/services/financial-service';
 import Link from 'next/link';
-import { ArrowLeft, RefreshCw, QrCode, CheckCircle2, Receipt, Download, HelpCircle } from 'lucide-react';
+import { ArrowLeft, RefreshCw, QrCode, CheckCircle2, Receipt, Download, HelpCircle, Wallet } from 'lucide-react';
 
 export default function PaymentGatewayPage() {
   const { user } = useAuth();
+  const searchParams = useSearchParams();
   const [isSuccess, setIsSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [tagihanId, setTagihanId] = useState<string | null>(null);
 
-  const simulateSuccess = () => {
+  useEffect(() => {
+    setTagihanId(searchParams.get('tagihanId') || '1'); // Default to 1 if testing
+  }, [searchParams]);
+
+  const initiateMidtransPayment = async () => {
     setIsProcessing(true);
-    // Simulate real-time API callback delay
-    setTimeout(() => {
+    try {
+      const response = await financialService.initiatePayment({ 
+        tagihanId: Number(tagihanId), 
+        metode: 'QRIS' 
+      });
+
+      if (response && response.token) {
+        // @ts-ignore - Midtrans snap
+        window.snap.pay(response.token, {
+          onSuccess: function (result: any) {
+            setIsProcessing(false);
+            setIsSuccess(true);
+          },
+          onPending: function (result: any) {
+            setIsProcessing(false);
+            alert("Menunggu pembayaran Anda!");
+          },
+          onError: function (result: any) {
+            setIsProcessing(false);
+            alert("Pembayaran gagal!");
+          },
+          onClose: function () {
+            setIsProcessing(false);
+          }
+        });
+      } else {
+        alert("Gagal mendapatkan token pembayaran dari server.");
+        setIsProcessing(false);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Terjadi kesalahan sistem saat menghubungi payment gateway.");
       setIsProcessing(false);
-      setIsSuccess(true);
-    }, 2000);
+    }
   };
     
   return (
@@ -89,11 +126,11 @@ export default function PaymentGatewayPage() {
                       <span className="text-[10px] font-black text-cyan-600 dark:text-cyan-400 mt-1 uppercase tracking-widest">Rp 150.000</span>
                     </div>
                     <button 
-                      onClick={simulateSuccess}
+                      onClick={initiateMidtransPayment}
                       disabled={isProcessing}
                       className="px-4 py-2 bg-emerald-50 text-emerald-600 border border-emerald-100 dark:bg-emerald-950/30 dark:border-emerald-800 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-100 transition-colors disabled:opacity-50"
                     >
-                      {isProcessing ? 'Dikonfirmasi...' : 'Bypass Sim'}
+                      {isProcessing ? 'Memproses...' : 'Bayar via Snap'}
                     </button>
                 </div>
               </div>

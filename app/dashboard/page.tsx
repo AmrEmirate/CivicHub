@@ -5,18 +5,20 @@ import { memberService } from '@/lib/services/member-service';
 import { financialService } from '@/lib/services/financial-service';
 import { announcementService } from '@/lib/services/announcement-service';
 import { MembersStats } from '@/lib/types/member';
-import { FinancialStats } from '@/lib/types/financial';
+import { FinancialStats, Transaction } from '@/lib/types/financial';
 import { Announcement } from '@/lib/types/announcement';
 import { useAuth } from '@/lib/context/auth-context';
 import { 
   FileText, PlusCircle, Wallet, TrendingUp, HandCoins, 
-  MoreHorizontal, Bell, Info 
+  Bell, Info, ArrowDownRight, ArrowUpRight, InboxIcon
 } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils/formatters';
 
 export default function DashboardPage() {
   const [membersStats, setMembersStats] = useState<MembersStats | null>(null);
   const [financialStats, setFinancialStats] = useState<FinancialStats | null>(null);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
 
@@ -24,14 +26,16 @@ export default function DashboardPage() {
     const loadStats = async () => {
       setIsLoading(true);
       try {
-        const [members, financial, annc] = await Promise.all([
+        const [members, financial, annc, trx] = await Promise.all([
           memberService.getMembersStats(),
           financialService.getFinancialStats(),
           announcementService.getPinnedAnnouncements(),
+          financialService.getTransactions({ page: 1, limit: 5 }),
         ]);
         setMembersStats(members);
         setFinancialStats(financial);
         setAnnouncements(annc);
+        setTransactions(trx.data || []);
       } catch (error) {
         console.error('Error loading stats:', error);
       } finally {
@@ -53,15 +57,10 @@ export default function DashboardPage() {
     );
   }
 
-  const formatIDR = (value: number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(value);
-  };
-
   return (
     <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
       {/* Welcome Banner */}
       <div className="relative overflow-hidden rounded-3xl border border-white/40 bg-gradient-to-br from-primary/95 to-primary-container p-8 shadow-2xl shadow-primary/20 text-white isolate">
-        {/* Decorative ambient blurred shapes */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-300/20 rounded-full blur-3xl -z-10 mix-blend-overlay pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
         <div className="absolute bottom-0 left-10 w-48 h-48 bg-emerald-300/20 rounded-full blur-2xl -z-10 mix-blend-overlay pointer-events-none transform -translate-y-1/2"></div>
         
@@ -84,7 +83,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Left/Main Column - Bento Grids */}
+        {/* Left/Main Column */}
         <div className="xl:col-span-2 flex flex-col gap-6">
           
           {/* Financial Summary Bento */}
@@ -99,7 +98,7 @@ export default function DashboardPage() {
               </div>
               <div className="relative z-10">
                 <h3 className="font-headline text-3xl font-black text-on-surface tracking-tight">
-                  {financialStats ? formatIDR(financialStats.saldo) : 'Rp 0'}
+                  {financialStats ? formatCurrency(financialStats.saldo) : 'Rp 0'}
                 </h3>
                 <p className="text-xs text-outline font-medium mt-1">Saldo akhir operasional RT</p>
               </div>
@@ -111,11 +110,10 @@ export default function DashboardPage() {
                 <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center text-white border border-emerald-400 group-hover:scale-110 group-hover:rotate-6 transition-all shadow-md shadow-emerald-500/30">
                   <TrendingUp strokeWidth={2.5} className="w-6 h-6" />
                 </div>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-700 bg-emerald-100 px-2 py-1 rounded-lg">+4.2%</span>
               </div>
               <div className="relative z-10">
                 <h3 className="font-headline text-2xl font-black text-on-surface tracking-tight">
-                  {financialStats ? formatIDR(financialStats.totalPemasukan) : 'Rp 0'}
+                  {financialStats ? formatCurrency(financialStats.totalPemasukan) : 'Rp 0'}
                 </h3>
                 <p className="text-xs text-outline font-medium mt-1">Pemasukan bulan ini</p>
               </div>
@@ -130,14 +128,14 @@ export default function DashboardPage() {
               </div>
               <div className="relative z-10">
                 <h3 className="font-headline text-2xl font-black text-on-surface tracking-tight">
-                  {financialStats ? formatIDR(financialStats.totalPengeluaran) : 'Rp 0'}
+                  {financialStats ? formatCurrency(financialStats.totalPengeluaran) : 'Rp 0'}
                 </h3>
                 <p className="text-xs text-outline font-medium mt-1">Pengeluaran bulan ini</p>
               </div>
             </div>
           </div>
 
-          {/* Ledger Table Mockup */}
+          {/* Transaksi Terakhir — DATA REAL dari BE */}
           <div className="bg-card rounded-3xl border border-outline-variant/30 shadow-sm overflow-hidden flex flex-col">
             <div className="p-6 border-b border-outline-variant/20 flex justify-between items-center bg-card">
               <div>
@@ -152,40 +150,49 @@ export default function DashboardPage() {
               <table className="w-full text-sm text-left">
                 <thead className="text-[10px] uppercase text-outline bg-surface-container/50 font-bold tracking-widest">
                   <tr>
-                    <th className="px-6 py-4">ID Transaksi</th>
+                    <th className="px-6 py-4">Keterangan</th>
                     <th className="px-6 py-4">Kategori</th>
                     <th className="px-6 py-4">Tanggal</th>
                     <th className="px-6 py-4 text-right">Nominal (Rp)</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant/20 font-inter">
-                  {[
-                    { id: 'TRX-2026-0091', kat: 'Iuran Sampah', date: '04 Apr 2026', nom: '+ 4.500.000', pos: true },
-                    { id: 'TRX-2026-0090', kat: 'Honor Security', date: '01 Apr 2026', nom: '- 3.200.000', pos: false },
-                    { id: 'TRX-2026-0089', kat: 'Donasi Masjid', date: '28 Mar 2026', nom: '+ 1.250.000', pos: true },
-                    { id: 'TRX-2026-0088', kat: 'Perawatan CCTV', date: '25 Mar 2026', nom: '- 850.000', pos: false },
-                  ].map((row, i) => (
+                  {transactions.length > 0 ? transactions.map((trx, i) => (
                     <tr key={i} className="hover:bg-surface-container/50 transition-colors group">
-                      <td className="px-6 py-4 font-bold text-on-surface">{row.id}</td>
+                      <td className="px-6 py-4 font-bold text-on-surface">{trx.description}</td>
                       <td className="px-6 py-4">
                         <span className="px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-surface-container border border-outline-variant/30 text-on-surface-variant flex items-center inline-flex gap-1.5">
-                          <div className={`w-1.5 h-1.5 rounded-full ${row.pos ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
-                          {row.kat}
+                          <div className={`w-1.5 h-1.5 rounded-full ${trx.type === 'pemasukan' ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
+                          {trx.category}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-outline font-medium">{row.date}</td>
-                      <td className={`px-6 py-4 text-right font-bold ${row.pos ? 'text-emerald-600' : 'text-on-surface'}`}>
-                        {row.nom}
+                      <td className="px-6 py-4 text-outline font-medium">
+                        {new Date(trx.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      </td>
+                      <td className={`px-6 py-4 text-right font-bold flex items-center justify-end gap-1.5 ${trx.type === 'pemasukan' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                        {trx.type === 'pemasukan'
+                          ? <ArrowDownRight strokeWidth={3} className="w-4 h-4" />
+                          : <ArrowUpRight strokeWidth={3} className="w-4 h-4" />}
+                        {formatCurrency(trx.amount)}
                       </td>
                     </tr>
-                  ))}
+                  )) : (
+                    <tr>
+                      <td colSpan={4} className="px-6 py-12 text-center">
+                        <div className="flex flex-col items-center gap-3 text-outline">
+                          <InboxIcon strokeWidth={1.5} className="w-10 h-10 text-outline-variant/50" />
+                          <p className="text-sm font-semibold">Belum ada transaksi tercatat</p>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        {/* Right Column - Sidebars */}
+        {/* Right Column */}
         <div className="flex flex-col gap-6">
           
           {/* Notifications Panel */}
@@ -197,7 +204,9 @@ export default function DashboardPage() {
                 </div>
                 <h2 className="font-headline font-extrabold text-lg text-on-surface">Papan Informasi</h2>
               </div>
-              <span className="bg-error text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md shadow-error/20">BARU</span>
+              {announcements.length > 0 && (
+                <span className="bg-error text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-md shadow-error/20">BARU</span>
+              )}
             </div>
             
             <div className="space-y-4 flex-grow">

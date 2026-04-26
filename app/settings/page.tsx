@@ -8,6 +8,8 @@ import {
   CreditCard, Save 
 } from 'lucide-react';
 
+import { useAuth } from '@/lib/context/auth-context';
+
 const settingsMenu = [
   { id: 'users', label: 'Manajemen Pengguna', icon: Users, description: 'Kelola akun dan role pengguna' },
   { id: 'preferences', label: 'Preferensi Sistem', icon: Sliders, description: 'Atur pengaturan umum sistem' },
@@ -16,6 +18,7 @@ const settingsMenu = [
 ];
 
 export default function SettingsPage() {
+  const { user } = useAuth();
   const [activeSection, setActiveSection] = useState('users');
   const [users, setUsers] = useState<any[]>([]); // Menunggu endpoint manajemen akses dari backend
 
@@ -249,7 +252,7 @@ export default function SettingsPage() {
             <div className="glass-panel rounded-3xl custom-shadow border border-outline-variant/30 p-8 max-w-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl -translate-y-12 translate-x-12 z-0"></div>
               
-              <div className="relative z-10">
+               <div className="relative z-10">
                  <h2 className="font-headline font-bold text-xl text-cyan-950 dark:text-cyan-50 mb-1">Profil Administrator</h2>
                  <p className="text-sm text-slate-500 mb-8">Ubah informasi dasar akun sekuritas Anda.</p>
 
@@ -258,7 +261,7 @@ export default function SettingsPage() {
                      <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Nama Lengkap</label>
                      <input
                        type="text"
-                       defaultValue="Budi Santoso"
+                       defaultValue={user?.name || ""}
                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-cyan-500 transition-colors shadow-sm"
                      />
                    </div>
@@ -267,7 +270,7 @@ export default function SettingsPage() {
                      <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">No. WhatsApp Pribadi</label>
                      <input
                        type="tel"
-                       defaultValue="+62812345678"
+                       defaultValue={user?.phone || ""}
                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-cyan-500 transition-colors shadow-sm"
                      />
                    </div>
@@ -276,7 +279,7 @@ export default function SettingsPage() {
                      <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Alamat Email Aktif</label>
                      <input
                        type="email"
-                       defaultValue="budi@example.com"
+                       defaultValue={user?.email || ""}
                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-semibold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-cyan-500 transition-colors shadow-sm"
                      />
                    </div>

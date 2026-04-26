@@ -20,14 +20,14 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
 
-    try {
-      await login(phone, password);
-      router.push('/dashboard');
-    } catch (err) {
-      setError('Login gagal. Periksa nomor telepon dan kata sandi Anda.');
-    } finally {
+    const result = await login(phone, password);
+    if (!result.success) {
+      setError(result.error || 'Login gagal. Periksa kredensial Anda.');
       setIsLoading(false);
+      return;
     }
+    
+    router.push('/dashboard');
   };
 
   // Demo auto-fill

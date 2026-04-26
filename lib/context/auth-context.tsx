@@ -26,13 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  const login = async (phone: string, password: string): Promise<void> => {
-    // Calling backend login endpoint using apiClient
-    // apiClient already maps API_BASE_URL internally, but wait, apiClient is in @/lib/api/api-client
-    // so we must import it.
-    
-    // We will do regular fetch manually here because apiClient depends on localStorage token,
-    // and for login we construct it. But apiClient handles POST.
+  const login = async (phone: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'}/auth/login`, {
         method: 'POST',
@@ -42,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.message || data.error || 'Login failed');
+        return { success: false, error: data.message || data.error || 'Akun dengan nomor telepon tersebut tidak ditemukan' };
       }
 
       const { user: backendUser, token } = data;
@@ -62,9 +56,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(mappedUser);
       setIsAuthenticated(true);
       localStorage.setItem('civic_user', JSON.stringify(mappedUser));
+      return { success: true };
     } catch (err: any) {
       console.error("Login Error:", err);
-      throw err;
+      return { success: false, error: 'Gagal terhubung ke server' };
     }
   };
 
