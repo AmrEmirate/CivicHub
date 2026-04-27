@@ -25,6 +25,7 @@ export default function FinancialPage() {
   const [isPrinting, setIsPrinting] = useState<string | null>(null);
   const [showKasModal, setShowKasModal] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isExporting, setIsExporting] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -62,6 +63,26 @@ export default function FinancialPage() {
       setIsPrinting(null);
       alert(`Simulasi: Kwitansi ${id} siap dicetak! Membuka preview cetak...`);
     }, 1500);
+  };
+
+  const handleExportLPJ = async () => {
+    const tahun = new Date().getFullYear().toString();
+    setIsExporting(true);
+    try {
+      const data = await financialService.exportLaporanTahunan(tahun);
+      // Jika BE return JSON data, convert ke file JSON dan trigger download
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `LPJ_Kas_RT_${tahun}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err: any) {
+      alert(`Gagal mengekspor laporan: ${err.message || 'Endpoint belum tersedia'}`);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   if (isLoading) {
@@ -197,8 +218,15 @@ export default function FinancialPage() {
           <p className="font-inter text-outline text-sm font-medium leading-relaxed max-w-xl">Pusat pemantauan saldo kas umum, manajemen referensi iuran, dan pencatatan transaksi harian.</p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <button className="flex-1 md:flex-none px-5 py-3 rounded-2xl bg-card border border-outline-variant/50 font-bold text-xs text-on-surface-variant hover:bg-surface-container transition-all flex items-center justify-center gap-2 shadow-sm focus:ring-4 focus:ring-primary/10">
-            <Download strokeWidth={2.5} className="w-4 h-4" /> Export LPJ
+          <button
+            onClick={handleExportLPJ}
+            disabled={isExporting}
+            className="flex-1 md:flex-none px-5 py-3 rounded-2xl bg-card border border-outline-variant/50 font-bold text-xs text-on-surface-variant hover:bg-surface-container transition-all flex items-center justify-center gap-2 shadow-sm focus:ring-4 focus:ring-primary/10 disabled:opacity-60"
+          >
+            {isExporting
+              ? <><Loader2 strokeWidth={2.5} className="w-4 h-4 animate-spin" /> Mengekspor...</>
+              : <><Download strokeWidth={2.5} className="w-4 h-4" /> Export LPJ</>
+            }
           </button>
           {(user?.role === 'bendahara' || user?.role === 'rt') && (
             <button

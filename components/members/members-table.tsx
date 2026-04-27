@@ -2,6 +2,7 @@
 
 import { Member } from '@/lib/types/member';
 import { memberService } from '@/lib/services/member-service';
+import EditMemberModal from '@/components/members/edit-member-modal';
 import { PencilLine, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
 
@@ -12,6 +13,7 @@ interface MembersTableProps {
 
 export default function MembersTable({ members, onRefresh }: MembersTableProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [editingMember, setEditingMember] = useState<Member | null>(null);
 
   const handleDelete = async (member: Member) => {
     if (!confirm(`Hapus data warga "${member.familyHeadName}"? Tindakan ini tidak dapat dibatalkan.`)) return;
@@ -87,7 +89,11 @@ export default function MembersTable({ members, onRefresh }: MembersTableProps) 
                 </td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="p-2.5 border border-outline-variant/30 hover:bg-cyan-50 hover:border-cyan-200 text-cyan-700 rounded-xl transition-colors shadow-sm" title="Edit Data">
+                    <button
+                      onClick={() => setEditingMember(member)}
+                      className="p-2.5 border border-outline-variant/30 hover:bg-cyan-50 hover:border-cyan-200 text-cyan-700 rounded-xl transition-colors shadow-sm"
+                      title="Edit Data"
+                    >
                       <PencilLine strokeWidth={2.5} className="w-4 h-4" />
                     </button>
                     <button
@@ -117,6 +123,18 @@ export default function MembersTable({ members, onRefresh }: MembersTableProps) 
           <h3 className="text-xl font-headline font-black text-on-surface mb-2">Data Tidak Ditemukan</h3>
           <p className="text-sm font-medium text-outline max-w-sm">Kami tidak dapat menemukan data warga dengan kondisi dan filter yang Anda berikan.</p>
         </div>
+      )}
+
+      {/* Edit Member Modal */}
+      {editingMember && (
+        <EditMemberModal
+          member={editingMember}
+          onClose={() => setEditingMember(null)}
+          onSuccess={() => {
+            setEditingMember(null);
+            onRefresh?.();
+          }}
+        />
       )}
     </div>
   );
