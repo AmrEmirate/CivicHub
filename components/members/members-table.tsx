@@ -1,13 +1,31 @@
 'use client';
 
 import { Member } from '@/lib/types/member';
+import { memberService } from '@/lib/services/member-service';
 import { PencilLine, Trash2, Users } from 'lucide-react';
+import { useState } from 'react';
 
 interface MembersTableProps {
   members: Member[];
+  onRefresh?: () => void;
 }
 
-export default function MembersTable({ members }: MembersTableProps) {
+export default function MembersTable({ members, onRefresh }: MembersTableProps) {
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDelete = async (member: Member) => {
+    if (!confirm(`Hapus data warga "${member.familyHeadName}"? Tindakan ini tidak dapat dibatalkan.`)) return;
+    setDeletingId(member.id);
+    try {
+      await memberService.deleteMember(member.id);
+      onRefresh?.();
+    } catch (err: any) {
+      alert(`Gagal menghapus: ${err.message || 'Terjadi kesalahan.'}`);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="overflow-x-auto">
@@ -72,8 +90,16 @@ export default function MembersTable({ members }: MembersTableProps) {
                     <button className="p-2.5 border border-outline-variant/30 hover:bg-cyan-50 hover:border-cyan-200 text-cyan-700 rounded-xl transition-colors shadow-sm" title="Edit Data">
                       <PencilLine strokeWidth={2.5} className="w-4 h-4" />
                     </button>
-                    <button className="p-2.5 border border-outline-variant/30 hover:bg-error-container hover:border-error/20 text-error rounded-xl transition-colors shadow-sm" title="Hapus Data">
-                      <Trash2 strokeWidth={2.5} className="w-4 h-4" />
+                    <button
+                      onClick={() => handleDelete(member)}
+                      disabled={deletingId === member.id}
+                      className="p-2.5 border border-outline-variant/30 hover:bg-error-container hover:border-error/20 text-error rounded-xl transition-colors shadow-sm disabled:opacity-40"
+                      title="Hapus Data"
+                    >
+                      {deletingId === member.id
+                        ? <div className="w-4 h-4 border-2 border-error/30 border-t-error rounded-full animate-spin" />
+                        : <Trash2 strokeWidth={2.5} className="w-4 h-4" />
+                      }
                     </button>
                   </div>
                 </td>

@@ -19,6 +19,8 @@ export default function MembersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [refreshKey, setRefreshKey] = useState(0);
+
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
@@ -38,7 +40,7 @@ export default function MembersPage() {
     };
 
     loadData();
-  }, [currentPage, filterStatus, searchQuery]);
+  }, [currentPage, filterStatus, searchQuery, refreshKey]);
 
   return (
     <div className="w-full flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
@@ -63,9 +65,9 @@ export default function MembersPage() {
           </button>
           <button 
             onClick={() => setShowAddModal(true)}
-            className="px-5 py-2.5 bg-gradient-to-r from-primary to-primary-container rounded-2xl font-bold text-sm text-white shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 active:scale-[0.98] transition-all flex items-center"
+            className="px-5 py-2.5 bg-cyan-950 rounded-2xl font-bold text-sm text-white shadow-lg shadow-cyan-900/20 hover:bg-cyan-900 hover:-translate-y-0.5 active:scale-[0.98] transition-all flex items-center"
           >
-            <UserPlus strokeWidth={2.5} className="mr-2 w-4 h-4 text-cyan-200" /> Tambah Warga
+            <UserPlus strokeWidth={2.5} className="mr-2 w-4 h-4 text-cyan-300" /> Tambah Warga
           </button>
         </div>
       </div>
@@ -166,7 +168,10 @@ export default function MembersPage() {
               <p className="text-outline font-inter text-sm font-medium animate-pulse">Menyelaraskan data warga...</p>
             </div>
           ) : (
-            <MembersTable members={members} />
+            <MembersTable
+              members={members}
+              onRefresh={() => setRefreshKey(prev => prev + 1)}
+            />
           )}
         </div>
       </div>
@@ -177,7 +182,7 @@ export default function MembersPage() {
           onClose={() => setShowAddModal(false)}
           onSuccess={() => {
             setShowAddModal(false);
-            setCurrentPage(1);
+            setRefreshKey(prev => prev + 1); // re-trigger useEffect
           }}
         />
       )}

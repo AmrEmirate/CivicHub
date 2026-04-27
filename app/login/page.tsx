@@ -9,7 +9,7 @@ import { ShieldCheck, Phone, Lock, ArrowRight, HelpCircle, Building } from 'luci
 export default function LoginPage() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState<'rt' | 'sekretaris' | 'bendahara' | 'warga'>('rt');
+
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
@@ -30,25 +30,7 @@ export default function LoginPage() {
     router.push('/dashboard');
   };
 
-  // Demo auto-fill
-  const loadDemo = (role: string) => {
-    switch (role) {
-      case 'rt':
-        setPhone('+62812345678');
-        break;
-      case 'bendahara':
-        setPhone('+62823456789');
-        break;
-      case 'sekretaris':
-        setPhone('+62834567890');
-        break;
-      case 'warga':
-        setPhone('1234567890123'); // KK number
-        break;
-    }
-    setPassword('password');
-    setSelectedRole(role as any);
-  };
+
 
   return (
     <div className="min-h-screen flex w-full overflow-hidden bg-surface">
@@ -99,8 +81,8 @@ export default function LoginPage() {
         <div className="w-full max-w-sm my-auto flex flex-col pt-8 animate-in fade-in slide-in-from-right-8 duration-700 ease-out">
           {/* Branding Header */}
           <div className="mb-10 flex flex-col items-start">
-            <div className="w-14 h-14 bg-gradient-to-br from-primary to-primary-container rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
-              <Building strokeWidth={2.5} className="text-white w-7 h-7" />
+            <div className="w-14 h-14 bg-[#001f2a] rounded-2xl flex items-center justify-center mb-6 shadow-xl hover:scale-105 transition-transform">
+              <Building strokeWidth={2.5} className="text-cyan-400 w-7 h-7" />
             </div>
             <h2 className="font-headline text-3xl font-extrabold text-on-surface tracking-tight">CivicHub</h2>
             <p className="text-outline mt-2 text-sm font-medium">Masukkan kredensial Anda untuk mengakses portal.</p>
@@ -109,27 +91,7 @@ export default function LoginPage() {
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-6 w-full">
             
-            {/* Role Selection */}
-            <div className="space-y-3">
-              <label className="font-label text-xs font-bold uppercase tracking-widest text-outline-variant">Akses Sebagai</label>
-              <div className="grid grid-cols-2 gap-2">
-                {(['rt', 'sekretaris', 'bendahara', 'warga'] as const).map((role) => (
-                  <label key={role} className="cursor-pointer group">
-                    <input 
-                      type="radio" 
-                      name="role" 
-                      value={role} 
-                      checked={selectedRole === role}
-                      onChange={() => setSelectedRole(role)}
-                      className="peer hidden" 
-                    />
-                    <div className="flex items-center justify-center py-2.5 px-2 rounded-xl border border-outline-variant/30 text-[11px] font-bold text-outline peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary peer-checked:shadow-md peer-checked:shadow-primary/20 transition-all uppercase tracking-wider group-hover:border-outline-variant/60">
-                      {role === 'rt' ? 'Super Admin' : role}
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
+
 
             {error && (
               <div className="bg-error-container/50 border border-error/20 text-error rounded-xl p-4 text-xs font-semibold flex items-start animate-in fade-in zoom-in-95 duration-300">
@@ -142,7 +104,7 @@ export default function LoginPage() {
               {/* Input Group: Phone */}
               <div className="relative group">
                 <label htmlFor="phone" className="font-label text-[10px] font-bold uppercase tracking-widest text-outline-variant block mb-1">
-                  {selectedRole === 'warga' ? 'No. KK / Telepon' : 'Nomor Telepon'}
+                  Nomor Telepon / No. KK
                 </label>
                 <div className="flex items-center border-b-[1.5px] border-outline-variant/40 focus-within:border-primary transition-colors duration-300">
                   <Phone strokeWidth={2.5} className="text-outline-variant group-focus-within:text-primary w-5 h-5 mr-3 transition-colors" />
@@ -152,7 +114,7 @@ export default function LoginPage() {
                     name="phone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder={selectedRole === 'warga' ? 'Masukkan 16 digit No. KK...' : '+62 812 3456...'}
+                    placeholder="Masukkan Nomor Telepon atau No. KK..."
                     className="w-full py-3 bg-transparent border-none focus:ring-0 text-on-surface font-semibold placeholder:text-outline-variant/50 focus:outline-none" 
                     required
                   />
@@ -191,7 +153,7 @@ export default function LoginPage() {
             <button 
               type="submit" 
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-primary to-primary-container text-white font-headline font-bold py-4 rounded-xl shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-70 disabled:pointer-events-none mt-4"
+              className="w-full bg-[#001f2a] text-white font-headline font-bold py-4 rounded-xl shadow-xl hover:bg-[#002b3d] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 group disabled:opacity-70 disabled:pointer-events-none mt-4"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -201,22 +163,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Development Utility / Demo Login */}
-          <div className="mt-8 flex flex-col items-center pt-8 border-t border-outline-variant/20">
-            <span className="text-[9px] text-outline-variant font-bold uppercase tracking-widest mb-3">Auto-Fill Kredensial Demo</span>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {['rt', 'sekretaris', 'bendahara', 'warga'].map((role) => (
-                <button 
-                  key={role}
-                  onClick={() => loadDemo(role)} 
-                  type="button" 
-                  className="px-3 py-1.5 bg-surface-container hover:bg-surface-container-high rounded-full text-[10px] text-outline font-bold uppercase tracking-widest transition-colors border border-outline-variant/30"
-                >
-                  {role}
-                </button>
-              ))}
-            </div>
-          </div>
+
 
           <div className="mt-auto pt-16 pb-4 flex flex-col items-center gap-6 w-full">
             <div className="flex items-center gap-6">

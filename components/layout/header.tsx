@@ -3,7 +3,7 @@
 import { useAuth } from '@/lib/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Menu, Search, ArrowRightLeft, ShieldCheck, FileEdit, Wallet, User, Bell, UserCircle, Lock, LogOut } from 'lucide-react';
+import { Menu, Search, User, Bell, UserCircle, Lock, LogOut } from 'lucide-react';
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -13,23 +13,14 @@ export default function Header({ onMenuClick }: HeaderProps) {
   const { user, setUser, logout } = useAuth();
   const router = useRouter();
   const [showMenu, setShowMenu] = useState(false);
-  const [showRoleSwitcher, setShowRoleSwitcher] = useState(false);
+
 
   const handleLogout = () => {
     logout();
     router.push('/login');
   };
 
-  const switchRole = (role: 'rt' | 'sekretaris' | 'bendahara' | 'warga') => {
-    if (user) {
-      const updatedUser = { ...user, role };
-      setUser?.(updatedUser);
-      localStorage.setItem('civic_user', JSON.stringify(updatedUser));
-      setShowRoleSwitcher(false);
-      // Optional: reload or re-path to dashboard to see menu changes
-      router.push('/dashboard');
-    }
-  };
+
 
   return (
     <header className="sticky top-0 z-30 glass-header shadow-sm border-b border-outline-variant/20 px-4 md:px-6 py-3 flex items-center justify-between gap-4 transition-all">
@@ -58,46 +49,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
       {/* Right Section */}
       <div className="flex items-center gap-3 ml-auto flex-shrink-0">
         
-        {/* DEMO ROLE SWITCHER (Tugas UX Polish) */}
-        <div className="relative">
-          <button 
-            onClick={() => setShowRoleSwitcher(!showRoleSwitcher)}
-            className="hidden lg:flex items-center gap-2 px-4 py-1.5 bg-primary dark:bg-primary-container text-on-primary rounded-full text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-md"
-          >
-            <ArrowRightLeft strokeWidth={2.5} className="w-4 h-4" />
-            Ganti Peran Demo
-          </button>
-          
-          {showRoleSwitcher && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setShowRoleSwitcher(false)} />
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl py-2 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Pilih Peran Simulasi</p>
-                </div>
-                {[
-                  { id: 'rt', label: 'Ketua RT', icon: ShieldCheck },
-                  { id: 'sekretaris', label: 'Sekretaris', icon: FileEdit },
-                  { id: 'bendahara', label: 'Bendahara', icon: Wallet },
-                  { id: 'warga', label: 'Warga', icon: User },
-                ].map((r) => (
-                  <button
-                    key={r.id}
-                    onClick={() => switchRole(r.id as any)}
-                    className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 transition-colors ${
-                      user?.role === r.id 
-                        ? 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-400 font-bold' 
-                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    }`}
-                  >
-                    <r.icon strokeWidth={2.5} className="w-4 h-4" />
-                    {r.label}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
+
 
         {/* Notifications */}
         <button className="relative p-2 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 text-slate-500 rounded-full transition-colors hidden sm:block">

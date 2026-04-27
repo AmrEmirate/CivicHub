@@ -6,34 +6,46 @@ import { financialService } from '@/lib/services/financial-service';
 import { Invoice, Transaction, FinancialStats } from '@/lib/types/financial';
 import { formatCurrency } from '@/lib/utils/formatters';
 import Link from 'next/link';
+import RecordKasModal from '@/components/financial/record-kas-modal';
 import { 
   Loader2, Receipt, Clock, Wallet, CalendarDays, 
   Printer, TrendingUp, HandCoins, ArrowDownRight, ArrowUpRight, 
   Eye, Megaphone, Trash2, ShieldAlert, DoorOpen, BadgeInfo,
-  Settings, Landmark, Download, PlusCircle, Search, Filter 
+  Settings, Landmark, Download, PlusCircle, Search, Filter, CheckCircle,
+  CreditCard
 } from 'lucide-react';
 
 export default function FinancialPage() {
   const { user } = useAuth();
   const [stats, setStats] = useState<FinancialStats | null>(null);
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [myInvoices, setMyInvoices] = useState<any[]>([]);
+  const [tunggakan, setTunggakan] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isPrinting, setIsPrinting] = useState<string | null>(null);
+  const [showKasModal, setShowKasModal] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
       try {
-        const [statsData, invoicesData, transactionsData] = await Promise.all([
-          financialService.getFinancialStats(),
-          financialService.getInvoices({ page: 1, limit: 10 }),
-          financialService.getTransactions({ page: 1, limit: 10 }),
-        ]);
-        
-        setStats(statsData);
-        setInvoices(invoicesData.data);
-        setTransactions(transactionsData.data);
+        if (user?.role === 'warga') {
+          // Warga hanya butuh tagihan pribadi
+          const myTagihanData = await financialService.getMyInvoices();
+          setMyInvoices(Array.isArray(myTagihanData) ? myTagihanData : []);
+        } else {
+          // Admin/Bendahara butuh stats, transaksi, dan tunggakan
+          const [statsData, transactionsData, tunggakanData] = await Promise.all([
+            financialService.getFinancialStats(),
+            financialService.getTransactions({ page: 1, limit: 10 }),
+            financialService.getInvoices({ page: 1, limit: 10 }),
+          ]);
+          
+          setStats(statsData);
+          setTransactions(transactionsData.data);
+          setTunggakan(tunggakanData.data);
+        }
       } catch (error) {
         console.error('Error loading financial data:', error);
       } finally {
@@ -41,8 +53,8 @@ export default function FinancialPage() {
       }
     };
 
-    loadData();
-  }, []);
+    if (user !== null) loadData();
+  }, [user, refreshKey]);
 
   const handlePrint = (id: string) => {
     setIsPrinting(id);
@@ -65,6 +77,10 @@ export default function FinancialPage() {
 
   // --- PORTAL WARGA ---
   if (user?.role === 'warga') {
+    // myInvoices sudah di-map: punya field alias 'nominal', 'periodeTeks', 'bulanNama'
+    const pendingInvoice = myInvoices.find((inv: any) => inv.status === 'BELUM_LUNAS' || inv.status === 'TUNGGAKAN');
+    const paidInvoices = myInvoices.filter((inv: any) => inv.status === 'LUNAS');
+
     return (
       <div className="w-full max-w-4xl mx-auto flex flex-col gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
         <div className="text-center mb-2">
@@ -73,108 +89,94 @@ export default function FinancialPage() {
         </div>
 
         {/* Invoice Highlight Card */}
-        <div className="relative bg-card rounded-[2.5rem] p-8 md:p-10 border border-outline-variant/30 overflow-hidden group hover:shadow-xl hover:shadow-cyan-500/5 transition-all duration-500">
-           <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 transition-transform group-hover:scale-110 pointer-events-none"></div>
-           
-           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-10">
-              <div>
-                 <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase mb-5 border border-amber-200">
-                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                    Menunggu Pembayaran
-                 </div>
-                 <p className="text-[10px] font-bold text-outline-variant uppercase tracking-widest">Tagihan Iuran Bulanan</p>
-                 <h2 className="font-headline text-6xl font-black text-on-surface mt-2 mb-2 tracking-tighter">Rp 150<span className="text-4xl text-outline-variant">.000</span></h2>
-                 <p className="text-xs font-bold text-outline">Periode: April 2026</p>
-                 <div className="font-inter text-xs text-on-surface-variant font-semibold mt-8 flex items-center bg-surface-container w-fit px-4 py-2.5 rounded-2xl border border-outline-variant/30 shadow-sm">
-                    <Clock strokeWidth={2.5} className="w-4 h-4 mr-2 text-rose-500" />
-                    Jatuh tempo: <strong className="ml-1.5 text-on-surface font-black">10 April 2026</strong>
-                 </div>
-              </div>
-
-              <div className="bg-surface-container/50 backdrop-blur-xl border border-outline-variant/30 p-8 rounded-[2rem] w-full md:w-80 shrink-0 shadow-xl shadow-black/5 hover:-translate-y-1 transition-transform">
-                 <h3 className="text-[10px] font-black text-outline uppercase tracking-widest border-b border-outline-variant/30 pb-4 mb-5 flex justify-between items-center">
-                    Rincian Tagihan <Receipt strokeWidth={2.5} className="w-4 h-4 text-primary" />
-                 </h3>
-                 <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                       <div className="flex flex-col">
-                          <span className="text-xs font-bold text-on-surface">Iuran Keamanan</span>
-                          <span className="text-[9px] text-outline uppercase font-bold mt-0.5">Wajib</span>
-                       </div>
-                       <span className="font-black text-on-surface text-sm">Rp 100k</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                       <div className="flex flex-col">
-                          <span className="text-xs font-bold text-on-surface">Kebersihan & Sosial</span>
-                          <span className="text-[9px] text-outline uppercase font-bold mt-0.5">Wajib</span>
-                       </div>
-                       <span className="font-black text-on-surface text-sm">Rp 50k</span>
-                    </div>
-                 </div>
-                 <Link href="/payment" className="mt-8 w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white rounded-2xl font-black text-xs uppercase tracking-widest flex justify-center items-center gap-2 hover:-translate-y-0.5 active:scale-95 transition-all shadow-lg shadow-primary/20 group">
-                    <Wallet strokeWidth={2.5} className="w-4 h-4 group-hover:scale-110 transition-transform" /> Bayar Sekarang
+        {pendingInvoice ? (
+          <div className="relative bg-card rounded-[2.5rem] p-8 md:p-10 border border-outline-variant/30 overflow-hidden group hover:shadow-xl hover:shadow-amber-500/5 transition-all duration-500">
+             <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 transition-transform group-hover:scale-110 pointer-events-none"></div>
+             <div className="relative z-10">
+                <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase mb-5 border border-amber-200">
+                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                   {pendingInvoice.status === 'TUNGGAKAN' ? 'Tunggakan' : 'Menunggu Pembayaran'}
+                </div>
+                <p className="text-[10px] font-bold text-outline-variant uppercase tracking-widest">Tagihan Iuran Bulanan</p>
+                <h2 className="font-headline text-5xl font-black text-on-surface mt-2 mb-2 tracking-tighter">
+                  {formatCurrency(pendingInvoice.totalNominal || pendingInvoice.nominal || 0)}
+                </h2>
+                <p className="text-xs font-bold text-outline">Periode: {pendingInvoice.periodeTeks || `${pendingInvoice.bulan}/${pendingInvoice.tahun}`}</p>
+                 
+                 {/* Tombol Bayar Sekarang */}
+                 <Link
+                   href={`/payment?tagihanId=${pendingInvoice.id}`}
+                   className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-cyan-900 hover:bg-cyan-800 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-lg shadow-cyan-900/20 hover:-translate-y-0.5 transition-all active:scale-[0.98]"
+                 >
+                   <CreditCard strokeWidth={2.5} className="w-4 h-4" />
+                   Bayar Sekarang
                  </Link>
-              </div>
-           </div>
-        </div>
+             </div>
+          </div>
+        ) : (
+          <div className="bg-emerald-50 dark:bg-emerald-950/20 rounded-[2.5rem] p-10 border border-emerald-200 text-center">
+            <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle strokeWidth={2} className="w-8 h-8 text-emerald-600" />
+            </div>
+            <h2 className="font-headline text-2xl font-black text-emerald-800 mb-2">Tagihan Lunas! 🎉</h2>
+            <p className="text-sm text-emerald-600 font-medium">Tidak ada tagihan yang perlu dibayar saat ini.</p>
+          </div>
+        )}
 
         {/* History / Digital Receipts */}
         <div className="mt-4">
            <div className="flex items-center justify-between px-2 mb-6">
-              <h3 className="font-headline font-black text-2xl text-on-surface tracking-tight">Kwitansi Digital</h3>
-              <span className="text-[10px] font-bold text-outline uppercase tracking-widest bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/30">3 Transaksi Terakhir</span>
-        </div>
-        <div className="bg-card rounded-[2rem] border border-outline-variant/30 overflow-hidden">
-           <table className="w-full text-sm text-left">
-              <thead className="bg-surface-container/50 text-[10px] uppercase text-outline font-bold tracking-widest border-b border-outline-variant/20">
-                 <tr>
-                    <th className="px-8 py-5">Periode Tagihan</th>
-                    <th className="px-6 py-5">Tgl Pembayaran</th>
-                    <th className="px-8 py-5 text-right">Kwitansi</th>
-                 </tr>
-              </thead>
-              <tbody className="divide-y divide-outline-variant/10">
-                 {[
-                    { month: 'Maret 2026', date: '05 Mar 2026', id: 'INV-MAR-001' },
-                    { month: 'Februari 2026', date: '08 Feb 2026', id: 'INV-FEB-012' },
-                    { month: 'Januari 2026', date: '02 Jan 2026', id: 'INV-JAN-045' }
-                 ].map((row, i) => (
-                    <tr key={i} className="hover:bg-primary/5 transition-colors group">
-                       <td className="px-8 py-6">
-                          <div className="font-black text-on-surface text-sm mb-1 group-hover:text-primary transition-colors tracking-tight">{row.month}</div>
-                          <div className="text-[9px] text-outline font-bold uppercase font-mono">{row.id}</div>
-                       </td>
-                       <td className="px-6 py-6">
-                          <div className="flex items-center gap-2 text-outline-variant font-bold text-xs">
-                             <CalendarDays strokeWidth={2.5} className="w-4 h-4 text-primary/70" />
-                             {row.date}
-                          </div>
-                       </td>
-                       <td className="px-8 py-6 text-right">
-                          <div className="flex items-center justify-end gap-3">
-                             <button 
-                               onClick={() => handlePrint(row.id)}
-                               disabled={!!isPrinting}
-                               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border ${
-                                 isPrinting === row.id 
-                                   ? 'bg-surface-container text-outline border-outline-variant/30' 
-                                   : 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 hover:border-emerald-300 shadow-sm active:scale-95'
-                               }`}
-                             >
-                                {isPrinting === row.id ? (
-                                  <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Mencetak...</>
-                                ) : (
-                                  <><Printer strokeWidth={2.5} className="w-3.5 h-3.5" /> Kwitansi</>
-                                )}
-                             </button>
-                             <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></span>
-                          </div>
-                       </td>
+              <h3 className="font-headline font-black text-2xl text-on-surface tracking-tight">Riwayat Tagihan</h3>
+              <span className="text-[10px] font-bold text-outline uppercase tracking-widest bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/30">{myInvoices.length} Total</span>
+           </div>
+           <div className="bg-card rounded-[2rem] border border-outline-variant/30 overflow-hidden">
+              <table className="w-full text-sm text-left">
+                 <thead className="bg-surface-container/50 text-[10px] uppercase text-outline font-bold tracking-widest border-b border-outline-variant/20">
+                    <tr>
+                       <th className="px-8 py-5">Periode Tagihan</th>
+                       <th className="px-6 py-5">Nominal</th>
+                       <th className="px-8 py-5 text-right">Tindakan</th>
                     </tr>
-                 ))}
-              </tbody>
-           </table>
-        </div>
+                 </thead>
+                 <tbody className="divide-y divide-outline-variant/10">
+                    {myInvoices.length === 0 ? (
+                      <tr>
+                        <td colSpan={3} className="px-8 py-10 text-center text-sm text-outline font-medium">
+                          Belum ada data tagihan.
+                        </td>
+                      </tr>
+                    ) : myInvoices.map((inv: any, i: number) => (
+                       <tr key={inv.id || i} className="hover:bg-primary/5 transition-colors group">
+                          <td className="px-8 py-6">
+                             <div className="font-black text-on-surface text-sm mb-1 group-hover:text-primary transition-colors tracking-tight">
+                               {inv.periodeTeks || `${inv.bulan}/${inv.tahun}`}
+                             </div>
+                             <div className="text-[9px] text-outline font-bold uppercase font-mono">INV-{String(inv.id).padStart(4, '0')}</div>
+                          </td>
+                          <td className="px-6 py-6">
+                             <span className="font-bold text-on-surface text-sm">{formatCurrency(inv.totalNominal || 0)}</span>
+                          </td>
+                          <td className="px-8 py-6 text-right">
+                              {inv.status !== 'LUNAS' ? (
+                                <Link
+                                  href={`/payment?tagihanId=${inv.id}`}
+                                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-cyan-900 hover:bg-cyan-800 text-white font-black text-[10px] uppercase tracking-widest transition-all hover:-translate-y-0.5 shadow-sm"
+                                >
+                                  <CreditCard strokeWidth={2.5} className="w-3.5 h-3.5" />
+                                  Bayar
+                                </Link>
+                              ) : (
+                                <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider border bg-emerald-50 text-emerald-700 border-emerald-200`}>
+                                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                  Lunas
+                                </span>
+                              )}
+                          </td>
+                       </tr>
+                    ))}
+                 </tbody>
+              </table>
+           </div>
         </div>
       </div>
     );
@@ -198,28 +200,32 @@ export default function FinancialPage() {
           <button className="flex-1 md:flex-none px-5 py-3 rounded-2xl bg-card border border-outline-variant/50 font-bold text-xs text-on-surface-variant hover:bg-surface-container transition-all flex items-center justify-center gap-2 shadow-sm focus:ring-4 focus:ring-primary/10">
             <Download strokeWidth={2.5} className="w-4 h-4" /> Export LPJ
           </button>
-          <button className="flex-1 md:flex-none px-5 py-3 bg-gradient-to-r from-primary to-primary-container rounded-2xl font-black text-xs text-white uppercase tracking-widest shadow-lg shadow-primary/20 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center justify-center gap-2">
-            <PlusCircle strokeWidth={2.5} className="w-4 h-4 text-cyan-200" /> Catat Kas Harian
-          </button>
+          {(user?.role === 'bendahara' || user?.role === 'rt') && (
+            <button
+              onClick={() => setShowKasModal(true)}
+              className="flex-1 md:flex-none px-5 py-3 bg-slate-900 rounded-2xl font-black text-xs text-white uppercase tracking-widest shadow-lg shadow-slate-900/20 hover:-translate-y-0.5 hover:bg-slate-800 active:scale-95 transition-all flex items-center justify-center gap-2">
+              <PlusCircle strokeWidth={2.5} className="w-4 h-4 text-slate-300" /> Catat Kas Harian
+            </button>
+          )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Buku Kas Umum Summary */}
         <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-[#001f2a] p-8 rounded-[2rem] border border-cyan-800/50 shadow-xl shadow-cyan-900/10 overflow-hidden text-white relative group">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
+          <div className="bg-white p-8 rounded-[2rem] border border-outline-variant/30 shadow-sm flex flex-col justify-between group hover:shadow-lg transition-all relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-cyan-500/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4 pointer-events-none"></div>
             <div className="relative z-10 flex flex-col h-full justify-between">
-               <div className="w-14 h-14 rounded-[1.25rem] bg-white/5 backdrop-blur-xl flex items-center justify-center border border-white/10 mb-8 shadow-inner text-cyan-200 group-hover:scale-110 transition-transform">
+               <div className="w-14 h-14 rounded-[1.25rem] bg-slate-50 flex items-center justify-center border border-slate-100 mb-8 shadow-sm text-slate-900 group-hover:scale-110 transition-transform">
                   <Landmark strokeWidth={2.5} className="w-7 h-7" />
                </div>
                <div>
-                  <p className="text-[10px] font-black text-cyan-400/80 uppercase tracking-widest mb-3">Total Saldo Kas Umum</p>
-                  <h3 className="font-headline text-4xl font-black tracking-tight leading-none drop-shadow-md">
+                  <p className="text-[10px] font-black text-outline uppercase tracking-widest mb-3">Total Saldo Kas Umum</p>
+                  <h3 className="font-headline text-4xl font-black tracking-tight leading-none text-slate-900">
                     {stats ? formatCurrency(stats.saldo) : 'Rp 0'}
                   </h3>
-                  <div className="mt-5 flex items-center gap-1.5 text-[10px] font-bold text-emerald-300 bg-emerald-500/10 w-fit px-2.5 py-1 rounded-full border border-emerald-500/20">
+                  <div className="mt-5 flex items-center gap-1.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 w-fit px-2.5 py-1 rounded-full border border-emerald-200">
                      <TrendingUp strokeWidth={3} className="w-3 h-3" />
                      +2.4% dari bulan lalu
                   </div>
@@ -358,37 +364,54 @@ export default function FinancialPage() {
              </div>
              <div className="bg-rose-50 text-rose-600 border border-rose-200 px-4 py-2 rounded-2xl text-sm font-black shadow-sm">{stats?.invoicesTunggakan || 0}</div>
           </div>
-          
-          <div className="overflow-y-auto pr-2 space-y-3 custom-scrollbar">
-             {[
-               { name: 'Bpk. Hendra Wijaya', amount: 300000, months: 2, telp: '0812XXX', blk: 'B-14' },
-               { name: 'Ibu Susanti', amount: 150000, months: 1, telp: '0857XXX', blk: 'A-21' },
-               { name: 'Bpk. Ahmad Malik', amount: 450000, months: 3, telp: '0813XXX', blk: 'C-05' },
-               { name: 'Sdr. Rizky R', amount: 150000, months: 1, telp: '0899XXX', blk: 'E-12' }
-             ].map((warga, i) => (
-                <div key={i} className="p-5 bg-surface-container/30 rounded-[1.5rem] border border-outline-variant/30 hover:border-rose-300 hover:bg-rose-50/50 transition-all group flex flex-col gap-4">
-                  <div className="flex justify-between items-start">
-                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-card border border-outline-variant/40 flex items-center justify-center text-rose-500 shadow-sm transition-all group-hover:bg-rose-500 group-hover:text-white group-hover:border-rose-500">
-                           <ShieldAlert strokeWidth={2.5} className="w-5 h-5" />
-                        </div>
-                        <div>
-                           <p className="text-xs font-bold text-on-surface tracking-tight truncate max-w-[100px]">{warga.name}</p>
-                           <p className="text-[10px] font-bold text-outline uppercase tracking-widest mt-1 flex items-center gap-1.5">
-                              <DoorOpen strokeWidth={2.5} className="w-3.5 h-3.5" /> {warga.blk} • <span className="text-rose-500">{warga.months} BLN</span>
-                           </p>
-                        </div>
-                     </div>
-                     <span className="text-sm font-black text-on-surface">{formatCurrency(warga.amount)}</span>
+                   <div className="overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+              {tunggakan.length === 0 ? (
+                <div className="text-center py-8 text-sm text-outline font-medium">
+                  <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <CheckCircle strokeWidth={2} className="w-6 h-6 text-emerald-500" />
                   </div>
-                  <button className="w-full py-2.5 bg-card border border-outline-variant/40 rounded-xl text-[10px] font-black text-primary uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 transition-all shadow-sm active:scale-95">
-                     <Megaphone strokeWidth={2.5} className="w-3.5 h-3.5" /> Kirim Pengingat
-                  </button>
-               </div>
-             ))}
-          </div>
+                  <p className="font-bold text-emerald-600">Tidak ada tunggakan</p>
+                  <p className="text-xs text-outline mt-1">Semua warga sudah lunas!</p>
+                </div>
+              ) : tunggakan.map((item: any, i: number) => (
+                 <div key={i} className="p-5 bg-surface-container/30 rounded-[1.5rem] border border-outline-variant/30 hover:border-rose-300 hover:bg-rose-50/50 transition-all group flex flex-col gap-4">
+                   <div className="flex justify-between items-start">
+                      <div className="flex items-center gap-3">
+                         <div className="w-10 h-10 rounded-xl bg-card border border-outline-variant/40 flex items-center justify-center text-rose-500 shadow-sm transition-all group-hover:bg-rose-500 group-hover:text-white group-hover:border-rose-500">
+                            <ShieldAlert strokeWidth={2.5} className="w-5 h-5" />
+                         </div>
+                         <div>
+                            <p className="text-xs font-bold text-on-surface tracking-tight truncate max-w-[120px]">
+                              {item.warga?.kepalaKeluarga || item.warga?.user?.name || 'Warga'}
+                            </p>
+                            <p className="text-[10px] font-bold text-outline uppercase tracking-widest mt-1 flex items-center gap-1.5">
+                               <DoorOpen strokeWidth={2.5} className="w-3.5 h-3.5" />
+                               {item.warga?.noRumah || '-'}
+                               <span className="text-rose-500 ml-1">{item.jumlahBulanTunggakan} BLN</span>
+                            </p>
+                         </div>
+                      </div>
+                      <span className="text-sm font-black text-on-surface">{formatCurrency(item.totalNominalTunggakan || 0)}</span>
+                   </div>
+                   <button className="w-full py-2.5 bg-card border border-outline-variant/40 rounded-xl text-[10px] font-black text-primary uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 transition-all shadow-sm active:scale-95">
+                      <Megaphone strokeWidth={2.5} className="w-3.5 h-3.5" /> Kirim Pengingat
+                   </button>
+                </div>
+              ))}
+           </div>
         </div>
       </div>
+
+      {/* Catat Kas Modal */}
+      {showKasModal && (
+        <RecordKasModal
+          onClose={() => setShowKasModal(false)}
+          onSuccess={() => {
+            setShowKasModal(false);
+            setRefreshKey(prev => prev + 1);
+          }}
+        />
+      )}
     </div>
   );
 }

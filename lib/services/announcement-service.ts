@@ -2,19 +2,36 @@ import { Announcement, CreateAnnouncementInput, UpdateAnnouncementInput } from '
 import { PaginationParams } from '@/lib/types/common';
 import { apiClient } from '@/lib/api/api-client';
 
+/**
+ * Map respons BE (Prisma Pengumuman) ke tipe Announcement FE.
+ * BE fields: { id, title, content, type, targetRole, authorId, author, createdAt, updatedAt }
+ * FE fields: { id, title, content, createdAt, updatedAt, createdBy, isPinned, tags }
+ */
+function mapPengumumanToAnnouncement(raw: any): Announcement {
+  return {
+    id: String(raw.id),
+    title: raw.title || '',
+    content: raw.content || '',
+    createdAt: raw.createdAt ? new Date(raw.createdAt) : new Date(),
+    updatedAt: raw.updatedAt ? new Date(raw.updatedAt) : new Date(),
+    createdBy: raw.author?.name || undefined,
+    isPinned: raw.isPinned || false,   // BE belum punya field ini, default false
+    tags: raw.tags || (raw.type && raw.type !== 'INFO' ? [raw.type] : []),
+    imageUrl: raw.imageUrl || undefined,
+  };
+}
+
 export const announcementService = {
   async getAnnouncements(params: PaginationParams & { search?: string }): Promise<any> {
-    let url = `/pengumuman?page=${params.page}&limit=${params.limit}`;
-    if (params.search) url += `&search=${encodeURIComponent(params.search)}`;
-    
-    // BE might not support pagination/search yet, but we'll send it
-    const rawData = await apiClient(url);
-    const dataArray = Array.isArray(rawData.data) ? rawData.data : Array.isArray(rawData) ? rawData : [];
-    const total = rawData.total || dataArray.length;
+    // BE belum support pagination/search di pengumuman, kirim saja tanpa params
+    const rawData = await apiClient('/pengumuman');
+    const dataArray = Array.isArray(rawData) ? rawData : (Array.isArray(rawData?.data) ? rawData.data : []);
+    const mapped = dataArray.map(mapPengumumanToAnnouncement);
+    const total = mapped.length;
 
     return { 
-      data: dataArray, 
-      total: total, 
+      data: mapped, 
+      total, 
       page: params.page, 
       limit: params.limit, 
       totalPages: Math.ceil(total / params.limit) || 1
@@ -24,26 +41,38 @@ export const announcementService = {
   async getAnnouncement(id: string): Promise<Announcement | null> {
     try {
       const data = await apiClient(`/pengumuman/${id}`);
-      return data;
+      return mapPengumumanToAnnouncement(data);
     } catch {
       return null;
     }
   },
 
   async createAnnouncement(input: CreateAnnouncementInput): Promise<Announcement> {
-    const data = await apiClient('/pengumuman', {
+    const response = await apiClient('/pengumuman', {
       method: 'POST',
-      data: input,
+      data: {
+        title: input.title,
+        content: input.content,
+        // BE hanya menerima: title, content, type, targetRole
+        // Field 'tags' dan 'isPinned' tidak ada di schema Prisma
+        type: 'INFO',
+        targetRole: 'ALL',
+      },
     });
-    return data;
+    // BE returns { message, data: {...} }
+    return mapPengumumanToAnnouncement(response.data || response);
   },
 
   async updateAnnouncement(id: string, input: UpdateAnnouncementInput): Promise<Announcement> {
-    const data = await apiClient(`/pengumuman/${id}`, {
+    const response = await apiClient(`/pengumuman/${id}`, {
       method: 'PUT',
-      data: input,
+      data: {
+        title: input.title,
+        content: input.content,
+      },
     });
-    return data;
+    // BE returns { message, data: {...} }
+    return mapPengumumanToAnnouncement(response.data || response);
   },
 
   async deleteAnnouncement(id: string): Promise<void> {
@@ -54,17 +83,21 @@ export const announcementService = {
      return this.getAnnouncements({ ...params, search: query });
   },
 
+  /**
+   * Ambil pengumuman terbaru untuk ditampilkan di dashboard.
+   * Karena schema BE belum memiliki field `isPinned`, kita ambil 3 terbaru saja.
+   */
   async getPinnedAnnouncements(): Promise<Announcement[]> {
-    // Usually a filter parameter, assuming FE filters locally if BE doesn't
-    const res = await this.getAnnouncements({ page: 1, limit: 100 });
-    return res.data.filter((a: any) => a.isPinned); // isPinned might not exist in BE DB actually, will just return first 2
+    const res = await this.getAnnouncements({ page: 1, limit: 5 });
+    return res.data.slice(0, 3);
   },
 
+  // togglePin: karena BE tidak support field isPinned, update client-side saja
+  // Jika BE ingin support ini, perlu tambah field isPinned ke schema Prisma
   async togglePin(id: string): Promise<Announcement> {
-    const data = await apiClient(`/pengumuman/${id}`, {
-      method: 'PUT',
-      data: { isPinned: true } // Mock updating
-    });
-    return data;
+    // Untuk sementara, hanya fetch data terbaru (tidak ada endpoint togglePin di BE)
+    const data = await apiClient(`/pengumuman/${id}`);
+    return mapPengumumanToAnnouncement(data);
   },
 };
+

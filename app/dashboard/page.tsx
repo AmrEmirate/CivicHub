@@ -60,23 +60,23 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
       {/* Welcome Banner */}
-      <div className="relative overflow-hidden rounded-3xl border border-white/40 bg-gradient-to-br from-primary/95 to-primary-container p-8 shadow-2xl shadow-primary/20 text-white isolate">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-300/20 rounded-full blur-3xl -z-10 mix-blend-overlay pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
-        <div className="absolute bottom-0 left-10 w-48 h-48 bg-emerald-300/20 rounded-full blur-2xl -z-10 mix-blend-overlay pointer-events-none transform -translate-y-1/2"></div>
+      <div className="relative overflow-hidden rounded-3xl border border-cyan-100 bg-gradient-to-br from-cyan-50 to-cyan-100 p-8 shadow-2xl shadow-cyan-200/50 text-cyan-950 isolate">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-300/30 rounded-full blur-3xl -z-10 mix-blend-multiply pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
+        <div className="absolute bottom-0 left-10 w-48 h-48 bg-emerald-300/30 rounded-full blur-2xl -z-10 mix-blend-multiply pointer-events-none transform -translate-y-1/2"></div>
         
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2">
             <h1 className="font-headline text-3xl font-extrabold tracking-tight">Selamat datang, {user?.name || 'Administrator'}! 👋</h1>
-            <p className="font-inter text-cyan-50/90 max-w-2xl text-sm leading-relaxed">
+            <p className="font-inter text-cyan-900/80 max-w-2xl text-sm leading-relaxed">
               Ini adalah ringkasan operasional Civic Hub hari ini. Saldo kas saat ini berada dalam kondisi sehat, ada {financialStats?.invoicesTunggakan || 0} tagihan yang masih membutuhkan perhatian.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <button className="px-5 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl font-semibold text-sm transition-all border border-white/20 flex items-center shadow-lg active:scale-95 group">
-              <FileText strokeWidth={2.5} className="w-4 h-4 mr-2 group-hover:text-amber-200 transition-colors" /> Laporan
+            <button className="px-5 py-2.5 bg-cyan-900/10 hover:bg-cyan-900/20 backdrop-blur-md rounded-2xl font-semibold text-sm transition-all border border-cyan-900/20 flex items-center shadow-sm active:scale-95 group text-cyan-950">
+              <FileText strokeWidth={2.5} className="w-4 h-4 mr-2 group-hover:text-cyan-700 transition-colors" /> Laporan
             </button>
-            <button className="px-5 py-2.5 bg-white text-primary rounded-2xl font-bold text-sm shadow-xl shadow-black/10 hover:scale-105 active:scale-95 transition-all flex items-center group">
-              <PlusCircle strokeWidth={3} className="w-4 h-4 mr-2 text-cyan-600 group-hover:rotate-90 transition-transform duration-300" /> Entri Baru
+            <button className="px-5 py-2.5 bg-cyan-950 text-white rounded-2xl font-bold text-sm shadow-lg hover:bg-cyan-900 hover:scale-105 active:scale-95 transition-all flex items-center group">
+              <PlusCircle strokeWidth={3} className="w-4 h-4 mr-2 text-cyan-300 group-hover:rotate-90 transition-transform duration-300" /> Entri Baru
             </button>
           </div>
         </div>
@@ -238,33 +238,33 @@ export default function DashboardPage() {
 
           {/* Members Stats Grid */}
           {membersStats && (
-            <div className="bg-gradient-to-br from-primary to-primary-container p-6 rounded-3xl shadow-lg border border-primary/20 text-white relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-8 translate-x-8 group-hover:bg-white/20 transition-colors duration-700"></div>
-              <div className="absolute bottom-0 left-0 w-40 h-40 bg-cyan-400/10 rounded-full blur-3xl translate-y-12 -translate-x-4 pointer-events-none"></div>
+            <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 p-6 rounded-3xl shadow-lg border border-cyan-200 text-cyan-950 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-900/5 rounded-full blur-2xl -translate-y-8 translate-x-8 group-hover:bg-cyan-900/10 transition-colors duration-700"></div>
+              <div className="absolute bottom-0 left-0 w-40 h-40 bg-emerald-400/10 rounded-full blur-3xl translate-y-12 -translate-x-4 pointer-events-none"></div>
               
-              <h2 className="font-headline font-extrabold text-lg mb-6 relative z-10 text-white tracking-tight flex items-center">
+              <h2 className="font-headline font-extrabold text-lg mb-6 relative z-10 text-cyan-950 tracking-tight flex items-center">
                 Statistik Kependudukan
               </h2>
               
               <div className="grid grid-cols-2 gap-3 relative z-10">
-                <div className="p-4 bg-white/[0.08] hover:bg-white/[0.12] rounded-2xl border border-white/10 transition-colors backdrop-blur-sm">
+                <div className="p-4 bg-cyan-900/[0.04] hover:bg-cyan-900/[0.08] rounded-2xl border border-cyan-900/10 transition-colors backdrop-blur-sm">
                   <span className="text-4xl font-black tabular-nums">{membersStats.totalKK}</span>
-                  <p className="text-[10px] uppercase tracking-widest text-cyan-50 font-semibold mt-1">Total KK</p>
+                  <p className="text-[10px] uppercase tracking-widest text-cyan-800 font-semibold mt-1">Total KK</p>
                 </div>
-                <div className="p-4 bg-white/[0.08] hover:bg-white/[0.12] rounded-2xl border border-white/10 transition-colors backdrop-blur-sm">
+                <div className="p-4 bg-cyan-900/[0.04] hover:bg-cyan-900/[0.08] rounded-2xl border border-cyan-900/10 transition-colors backdrop-blur-sm">
                   <span className="text-4xl font-black tabular-nums">{membersStats.totalWarga}</span>
-                  <p className="text-[10px] uppercase tracking-widest text-cyan-50 font-semibold mt-1">Jiwa Warga</p>
+                  <p className="text-[10px] uppercase tracking-widest text-cyan-800 font-semibold mt-1">Jiwa Warga</p>
                 </div>
-                <div className="p-4 bg-white/[0.08] hover:bg-white/[0.12] rounded-2xl border border-white/10 transition-colors backdrop-blur-sm">
+                <div className="p-4 bg-cyan-900/[0.04] hover:bg-cyan-900/[0.08] rounded-2xl border border-cyan-900/10 transition-colors backdrop-blur-sm">
                   <span className="text-2xl font-bold tabular-nums">{membersStats.hunianMilik}</span>
-                  <p className="text-[10px] uppercase tracking-widest text-emerald-200 font-semibold mt-1 flex items-center">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span> Milik Pribadi
+                  <p className="text-[10px] uppercase tracking-widest text-emerald-700 font-semibold mt-1 flex items-center">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Milik Pribadi
                   </p>
                 </div>
-                <div className="p-4 bg-white/[0.08] hover:bg-white/[0.12] rounded-2xl border border-white/10 transition-colors backdrop-blur-sm">
+                <div className="p-4 bg-cyan-900/[0.04] hover:bg-cyan-900/[0.08] rounded-2xl border border-cyan-900/10 transition-colors backdrop-blur-sm">
                   <span className="text-2xl font-bold tabular-nums">{membersStats.hunianSewa}</span>
-                  <p className="text-[10px] uppercase tracking-widest text-amber-200 font-semibold mt-1 flex items-center">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5"></span> Sewa/Kontrak
+                  <p className="text-[10px] uppercase tracking-widest text-amber-700 font-semibold mt-1 flex items-center">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span> Sewa/Kontrak
                   </p>
                 </div>
               </div>

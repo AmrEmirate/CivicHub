@@ -53,8 +53,8 @@ export default function Sidebar({ onClose }: SidebarProps) {
               onClick={() => onClose?.()}
               className={`flex items-center px-6 py-3.5 transition-all duration-200 ${
                 active
-                  ? 'text-on-primary bg-primary shadow-lg shadow-primary/20 font-bold border-r-4 border-white transform scale-105 z-10'
-                  : 'text-on-surface/70 hover:bg-surface-container-highest hover:text-primary'
+                  ? 'bg-slate-50 text-slate-900 shadow-sm font-bold border-r-4 border-slate-900 transform scale-105 z-10'
+                  : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
               <module.icon strokeWidth={2.5} className="w-5 h-5 mr-3" />
@@ -67,7 +67,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
       {/* Footer Section */}
       <div className="p-6 space-y-4">
         {user?.role === 'rt' || user?.role === 'bendahara' ? (
-          <button className="w-full bg-primary text-on-primary py-3 rounded-xl font-semibold text-sm primary-gradient shadow-sm hover:scale-105 transition-transform">
+          <button className="w-full bg-slate-900 text-white py-3 rounded-xl font-semibold text-sm shadow-sm hover:bg-slate-800 hover:scale-105 transition-transform">
             Export Report
           </button>
         ) : null}

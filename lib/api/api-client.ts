@@ -14,7 +14,8 @@ export async function apiClient(endpoint: string, options: RequestOptions = {}) 
   }
 
   const config: RequestInit = {
-    method: data ? 'POST' : 'GET',
+    // Prioritaskan method dari customOptions, fallback ke POST jika ada data, atau GET
+    method: customOptions.method || (data ? 'POST' : 'GET'),
     headers: {
       'Content-Type': 'application/json',
       ...(token && { Authorization: `Bearer ${token}` }),
