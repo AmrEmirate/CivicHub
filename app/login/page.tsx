@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/context/auth-context';
 import Link from 'next/link';
 import { ShieldCheck, Phone, Lock, ArrowRight, HelpCircle, Building } from 'lucide-react';
+import ForgotPasswordModal from '@/components/auth/forgot-password-modal';
 
 export default function LoginPage() {
   const [phone, setPhone] = useState('');
@@ -12,6 +13,7 @@ export default function LoginPage() {
 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
 
@@ -146,7 +148,13 @@ export default function LoginPage() {
                 <input type="checkbox" className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20 focus:ring-offset-0 transition-colors cursor-pointer" />
                 <span className="ml-2 text-xs font-semibold text-outline group-hover:text-on-surface transition-colors">Ingat saya</span>
               </label>
-              <a href="#" className="text-xs font-bold text-primary hover:text-primary-container transition-colors">Lupa Kata Sandi?</a>
+              <button 
+                type="button"
+                onClick={() => setShowForgotPasswordModal(true)}
+                className="text-xs font-bold text-primary hover:text-primary-container transition-colors"
+              >
+                Lupa Kata Sandi?
+              </button>
             </div>
 
             {/* Primary CTA */}
@@ -179,6 +187,10 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
+
+      {showForgotPasswordModal && (
+        <ForgotPasswordModal onClose={() => setShowForgotPasswordModal(false)} />
+      )}
     </div>
   );
 }

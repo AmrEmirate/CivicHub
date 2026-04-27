@@ -12,6 +12,7 @@ import {
   FileText, PlusCircle, Wallet, TrendingUp, HandCoins, 
   Bell, Info, ArrowDownRight, ArrowUpRight, InboxIcon
 } from 'lucide-react';
+import Link from 'next/link';
 import { formatCurrency } from '@/lib/utils/formatters';
 
 export default function DashboardPage() {
@@ -72,12 +73,12 @@ export default function DashboardPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <button className="px-5 py-2.5 bg-cyan-900/10 hover:bg-cyan-900/20 backdrop-blur-md rounded-2xl font-semibold text-sm transition-all border border-cyan-900/20 flex items-center shadow-sm active:scale-95 group text-cyan-950">
+            <Link href="/financial" className="px-5 py-2.5 bg-cyan-900/10 hover:bg-cyan-900/20 backdrop-blur-md rounded-2xl font-semibold text-sm transition-all border border-cyan-900/20 flex items-center shadow-sm active:scale-95 group text-cyan-950">
               <FileText strokeWidth={2.5} className="w-4 h-4 mr-2 group-hover:text-cyan-700 transition-colors" /> Laporan
-            </button>
-            <button className="px-5 py-2.5 bg-cyan-950 text-white rounded-2xl font-bold text-sm shadow-lg hover:bg-cyan-900 hover:scale-105 active:scale-95 transition-all flex items-center group">
+            </Link>
+            <Link href="/financial" className="px-5 py-2.5 bg-cyan-950 text-white rounded-2xl font-bold text-sm shadow-lg hover:bg-cyan-900 hover:scale-105 active:scale-95 transition-all flex items-center group">
               <PlusCircle strokeWidth={3} className="w-4 h-4 mr-2 text-cyan-300 group-hover:rotate-90 transition-transform duration-300" /> Entri Baru
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -142,9 +143,9 @@ export default function DashboardPage() {
                 <h2 className="font-headline font-extrabold text-lg text-on-surface">Laporan Transaksi Terakhir</h2>
                 <p className="text-xs text-outline mt-1 font-medium">Mutasi mutakhir kas operasional CivicHub</p>
               </div>
-              <button className="text-primary text-sm font-bold cursor-pointer hover:underline underline-offset-4 focus:outline-none">
+              <Link href="/financial" className="text-primary text-sm font-bold cursor-pointer hover:underline underline-offset-4 focus:outline-none">
                 Semua Transaksi
-              </button>
+              </Link>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
@@ -231,9 +232,9 @@ export default function DashboardPage() {
                 </div>
               )}
             </div>
-            <button className="w-full mt-6 py-3 rounded-xl border border-outline-variant/50 text-xs font-bold text-on-surface-variant hover:bg-surface-container active:scale-95 transition-all shadow-sm">
+            <Link href="/announcements" className="w-full mt-6 py-3 rounded-xl border border-outline-variant/50 text-xs font-bold text-on-surface-variant hover:bg-surface-container active:scale-95 transition-all shadow-sm text-center block">
               Lihat Pusat Pesan
-            </button>
+            </Link>
           </div>
 
           {/* Members Stats Grid */}

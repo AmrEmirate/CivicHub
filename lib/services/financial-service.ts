@@ -129,6 +129,29 @@ export const financialService = {
     }
   },
 
+  async updateIuranMaster(id: string | number, input: { nama?: string; nominal?: number; periode?: string }): Promise<any> {
+    const data = await apiClient(`/tagihan/iuran-master/${id}`, {
+      method: 'PUT',
+      data: input,
+    });
+    return data;
+  },
+
+  async deleteIuranMaster(id: string | number): Promise<any> {
+    const data = await apiClient(`/tagihan/iuran-master/${id}`, {
+      method: 'DELETE',
+    });
+    return data;
+  },
+
+  async updateTagihanStatus(id: string | number, status: string): Promise<any> {
+    const data = await apiClient(`/tagihan/${id}/status`, {
+      method: 'PUT',
+      data: { status },
+    });
+    return data;
+  },
+
   // Record Kas Harian (Pemasukan / Pengeluaran)
   async recordKas(input: {
     jenis: 'PEMASUKAN' | 'PENGELUARAN';

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/context/auth-context';
 import { useSearchParams } from 'next/navigation';
-import { financialService } from '@/lib/services/financial-service';
+import { paymentService } from '@/lib/services/payment-service';
 import Link from 'next/link';
 import { ArrowLeft, RefreshCw, QrCode, CheckCircle2, Receipt, Download, HelpCircle, Wallet } from 'lucide-react';
 
@@ -15,19 +15,23 @@ export default function PaymentGatewayPage() {
   const [tagihanId, setTagihanId] = useState<string | null>(null);
 
   useEffect(() => {
-    setTagihanId(searchParams.get('tagihanId') || '1'); // Default to 1 if testing
+    const id = searchParams.get('tagihanId');
+    if (id) setTagihanId(id);
   }, [searchParams]);
 
   const initiateMidtransPayment = async () => {
+    if (!tagihanId) return;
     setIsProcessing(true);
     try {
-      // Simulasi delay proses pembayaran (endpoint Midtrans belum tersedia di BE)
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setIsSuccess(true);
-    } catch (e) {
+      const res = await paymentService.initiate(parseInt(tagihanId, 10));
+      if (res.checkoutUrl) {
+        window.location.href = res.checkoutUrl;
+      } else {
+        throw new Error("Checkout URL tidak ditemukan");
+      }
+    } catch (e: any) {
       console.error(e);
-      alert("Terjadi kesalahan sistem.");
-    } finally {
+      alert(`Gagal memproses pembayaran: ${e.message}`);
       setIsProcessing(false);
     }
   };
