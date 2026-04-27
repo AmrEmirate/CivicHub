@@ -5,13 +5,15 @@ import { useAuth } from '@/lib/context/auth-context';
 import { announcementService } from '@/lib/services/announcement-service';
 import { Announcement } from '@/lib/types/announcement';
 import AddAnnouncementModal from '@/components/announcements/add-announcement-modal';
+import EditAnnouncementModal from '@/components/announcements/edit-announcement-modal';
 import { formatDateTime } from '@/lib/utils/formatters';
-import { Megaphone, ChevronRight, PlusCircle, BellOff, Pin, FileText, Trash2 } from 'lucide-react';
+import { Megaphone, ChevronRight, PlusCircle, BellOff, Pin, FileText, Trash2, PencilLine } from 'lucide-react';
 
 export default function AnnouncementsPage() {
   const { user } = useAuth();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -160,6 +162,13 @@ export default function AnnouncementsPage() {
                 {canManage && (
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
+                      onClick={() => setEditingAnnouncement(announcement)}
+                      className="p-2 hover:bg-cyan-50 text-slate-400 hover:text-cyan-700 rounded-xl transition-colors"
+                      title="Edit"
+                    >
+                      <PencilLine strokeWidth={2.5} className="w-4 h-4" />
+                    </button>
+                    <button
                       onClick={() => handleTogglePin(announcement.id)}
                       className={`p-2 rounded-xl transition-colors ${
                         announcement.isPinned
@@ -185,12 +194,24 @@ export default function AnnouncementsPage() {
         </div>
       )}
 
-      {/* Add Announcement Modal — hanya accessible oleh admin */}
+      {/* Add Announcement Modal */}
       {showAddModal && canManage && (
         <AddAnnouncementModal
           onClose={() => setShowAddModal(false)}
           onSuccess={() => {
             setShowAddModal(false);
+            setRefreshKey(prev => prev + 1);
+          }}
+        />
+      )}
+
+      {/* Edit Announcement Modal */}
+      {editingAnnouncement && canManage && (
+        <EditAnnouncementModal
+          announcement={editingAnnouncement}
+          onClose={() => setEditingAnnouncement(null)}
+          onSuccess={() => {
+            setEditingAnnouncement(null);
             setRefreshKey(prev => prev + 1);
           }}
         />

@@ -69,17 +69,22 @@ export default function FinancialPage() {
     const tahun = new Date().getFullYear().toString();
     setIsExporting(true);
     try {
-      const data = await financialService.exportLaporanTahunan(tahun);
-      // Jika BE return JSON data, convert ke file JSON dan trigger download
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      // BE returns a PDF stream, gunakan fetch langsung untuk blob download
+      const token = typeof window !== 'undefined' ? localStorage.getItem('civichub_token') : null;
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+      const response = await fetch(`${apiBase}/api/kas/laporan-tahunan/${tahun}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error(`Server error: ${response.status}`);
+      const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `LPJ_Kas_RT_${tahun}.json`;
+      a.download = `LPJ_Kas_RT_${tahun}.pdf`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (err: any) {
-      alert(`Gagal mengekspor laporan: ${err.message || 'Endpoint belum tersedia'}`);
+      alert(`Gagal mengekspor laporan: ${err.message || 'Coba lagi'}`);
     } finally {
       setIsExporting(false);
     }
