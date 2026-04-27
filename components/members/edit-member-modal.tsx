@@ -30,8 +30,8 @@ export default function EditMemberModal({ member, onClose, onSuccess }: EditMemb
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.familyHeadName.trim()) return setError('Nama kepala keluarga wajib diisi.');
-    if (!form.kkNumber.trim()) return setError('Nomor KK wajib diisi.');
+    if (!(form.familyHeadName || '').trim()) return setError('Nama kepala keluarga wajib diisi.');
+    if (!(form.kkNumber || '').trim()) return setError('Nomor KK wajib diisi.');
 
     setIsLoading(true);
     try {
